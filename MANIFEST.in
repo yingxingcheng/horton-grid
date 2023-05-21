@@ -1,0 +1,8 @@
+recursive-include horton *.pyx *.pxd *.h *.cpp
+recursive-exclude horton cext.cpp
+
+include data/setup_cfgs/*.cfg
+include data/setup_cfgs/README
+
+include README
+include COPYING
