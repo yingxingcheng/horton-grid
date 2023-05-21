@@ -22,8 +22,8 @@
 
 
 import numpy as np
-from horton.cext import Cell
-from horton.grid.cext import UniformGrid
+from horton_grid.cext import Cell
+from horton_grid.grid.cext import UniformGrid
 
 
 __all__ = ['load_cube', 'dump_cube']

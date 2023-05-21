@@ -21,11 +21,11 @@
 '''Numerical integration grids'''
 
 
-from horton.grid.base import *
-from horton.grid.atgrid import *
-from horton.grid.cext import *
-from horton.grid.molgrid import *
-from horton.grid.ode2 import *
-from horton.grid.poisson import *
-from horton.grid.radial import *
-from horton.grid.visual import *
+from horton_grid.grid.base import *
+from horton_grid.grid.atgrid import *
+from horton_grid.grid.cext import *
+from horton_grid.grid.molgrid import *
+from horton_grid.grid.ode2 import *
+from horton_grid.grid.poisson import *
+from horton_grid.grid.radial import *
+from horton_grid.grid.visual import *

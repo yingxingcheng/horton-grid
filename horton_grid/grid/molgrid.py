@@ -18,78 +18,83 @@
 # along with this program; if not, see <http://www.gnu.org/licenses/>
 #
 # --
-'''Molecular integration grids'''
-
+"""Molecular integration grids"""
 
 
 import numpy as np
 
-from horton.grid.base import IntGrid
-from horton.grid.atgrid import AtomicGrid, AtomicGridSpec
-from horton.grid.cext import becke_helper_atom
-from horton.log import log, timer, biblio
-from horton.periodic import periodic
-from horton.utils import typecheck_geo, doc_inherit
+from horton_grid.grid.base import IntGrid
+from horton_grid.grid.atgrid import AtomicGrid, AtomicGridSpec
+from horton_grid.grid.cext import becke_helper_atom
+from horton_grid.log import log, timer, biblio
+from horton_grid.periodic import periodic
+from horton_grid.utils import typecheck_geo, doc_inherit
 
 
-__all__ = [
-    'BeckeMolGrid'
-]
-
+__all__ = ["BeckeMolGrid"]
 
 
 class BeckeMolGrid(IntGrid):
-    '''Molecular integration grid using Becke weights'''
+    """Molecular integration grid using Becke weights"""
 
-    @timer.with_section('Becke-Lebedev')
-    def __init__(self, centers, numbers, pseudo_numbers=None, agspec='medium', k=3, random_rotate=True, mode='discard'):
-        '''
-           **Arguments:**
+    @timer.with_section("Becke-Lebedev")
+    def __init__(
+        self,
+        centers,
+        numbers,
+        pseudo_numbers=None,
+        agspec="medium",
+        k=3,
+        random_rotate=True,
+        mode="discard",
+    ):
+        """
+        **Arguments:**
 
-           centers
-                An array (N, 3) with centers for the atom-centered grids.
+        centers
+             An array (N, 3) with centers for the atom-centered grids.
 
-           numbers
-                An array (N,) with atomic numbers.
+        numbers
+             An array (N,) with atomic numbers.
 
-           **Optional arguments:**
+        **Optional arguments:**
 
-           pseudo_numbers
-                An array (N,) with effective core charges. When not given, this
-                defaults to ``numbers``.
+        pseudo_numbers
+             An array (N,) with effective core charges. When not given, this
+             defaults to ``numbers``.
 
-           agspec
-                A specifications of the atomic grid. This can either be an
-                instance of the AtomicGridSpec object, or the first argument
-                of its constructor.
+        agspec
+             A specifications of the atomic grid. This can either be an
+             instance of the AtomicGridSpec object, or the first argument
+             of its constructor.
 
-           k
-                The order of the switching function in Becke's weighting scheme.
+        k
+             The order of the switching function in Becke's weighting scheme.
 
-           random_rotate
-                Flag to control random rotation of spherical grids.
+        random_rotate
+             Flag to control random rotation of spherical grids.
 
-           mode
-                Select one of the following options regarding atomic subgrids:
+        mode
+             Select one of the following options regarding atomic subgrids:
 
-                * ``'discard'`` (the default) means that all information about
-                  subgrids gets discarded.
+             * ``'discard'`` (the default) means that all information about
+               subgrids gets discarded.
 
-                * ``'keep'`` means that a list of subgrids is kept, including
-                  the integration weights of the local grids.
+             * ``'keep'`` means that a list of subgrids is kept, including
+               the integration weights of the local grids.
 
-                * ``'only'`` means that only the subgrids are constructed and
-                  that the computation of the molecular integration weights
-                  (based on the Becke partitioning) is skipped.
-        '''
+             * ``'only'`` means that only the subgrids are constructed and
+               that the computation of the molecular integration weights
+               (based on the Becke partitioning) is skipped.
+        """
         natom, centers, numbers, pseudo_numbers = typecheck_geo(centers, numbers, pseudo_numbers)
         self._centers = centers
         self._numbers = numbers
         self._pseudo_numbers = pseudo_numbers
 
         # check if the mode argument is valid
-        if mode not in ['discard', 'keep', 'only']:
-            raise ValueError('The mode argument must be \'discard\', \'keep\' or \'only\'.')
+        if mode not in ["discard", "keep", "only"]:
+            raise ValueError("The mode argument must be 'discard', 'keep' or 'only'.")
 
         # transform agspec into a usable format
         if not isinstance(agspec, AtomicGridSpec):
@@ -108,13 +113,13 @@ class BeckeMolGrid(IntGrid):
         self._becke_weights = np.ones(size, float)
 
         # construct the atomic grids
-        if mode != 'discard':
+        if mode != "discard":
             atgrids = []
         else:
             atgrids = None
         offset = 0
 
-        if mode != 'only':
+        if mode != "only":
             # More recent covalent radii are used than in the original work of Becke.
             # No covalent radius is defined for elements heavier than Curium and a
             # default value of 3.0 Bohr is used for heavier elements.
@@ -122,19 +127,30 @@ class BeckeMolGrid(IntGrid):
 
         # The actual work:
         if log.do_medium:
-            log('Preparing Becke-Lebedev molecular integration grid.')
+            log("Preparing Becke-Lebedev molecular integration grid.")
         pb = log.progress(natom)
         for i in range(natom):
             atsize = agspec.get_size(self.numbers[i], self.pseudo_numbers[i])
             atgrid = AtomicGrid(
-                self.numbers[i], self.pseudo_numbers[i],
-                self.centers[i], agspec, random_rotate,
-                points[offset:offset+atsize])
-            if mode != 'only':
-                atbecke_weights = self._becke_weights[offset:offset+atsize]
-                becke_helper_atom(points[offset:offset+atsize], atbecke_weights, cov_radii, self.centers, i, self._k)
-                weights[offset:offset+atsize] = atgrid.weights*atbecke_weights
-            if mode != 'discard':
+                self.numbers[i],
+                self.pseudo_numbers[i],
+                self.centers[i],
+                agspec,
+                random_rotate,
+                points[offset : offset + atsize],
+            )
+            if mode != "only":
+                atbecke_weights = self._becke_weights[offset : offset + atsize]
+                becke_helper_atom(
+                    points[offset : offset + atsize],
+                    atbecke_weights,
+                    cov_radii,
+                    self.centers,
+                    i,
+                    self._k,
+                )
+                weights[offset : offset + atsize] = atgrid.weights * atbecke_weights
+            if mode != "discard":
                 atgrids.append(atgrid)
             offset += atsize
             pb()
@@ -148,88 +164,98 @@ class BeckeMolGrid(IntGrid):
     @classmethod
     def from_hdf5(cls, grp):
         return BeckeMolGrid(
-            grp['centers'][:],
-            grp['numbers'][:],
-            grp['psuedo_numbers'][:],
-            AtomicGridSpec.from_hdf5(grp['agspec']),
-            grp['k'][()],
-            grp['random_rotate'][()],
-            grp.attrs['mode'],
+            grp["centers"][:],
+            grp["numbers"][:],
+            grp["psuedo_numbers"][:],
+            AtomicGridSpec.from_hdf5(grp["agspec"]),
+            grp["k"][()],
+            grp["random_rotate"][()],
+            grp.attrs["mode"],
         )
 
     def to_hdf5(self, grp):
-        grp.attrs['class'] = self.__class__.__name__
-        grp['centers'] = self._centers
-        grp['numbers'] = self._numbers
-        grp['psuedo_numbers'] = self._pseudo_numbers
-        grp_agspec = grp.require_group('agspec')
+        grp.attrs["class"] = self.__class__.__name__
+        grp["centers"] = self._centers
+        grp["numbers"] = self._numbers
+        grp["psuedo_numbers"] = self._pseudo_numbers
+        grp_agspec = grp.require_group("agspec")
         self.agspec.to_hdf5(grp_agspec, (self._numbers, self._pseudo_numbers))
-        grp['random_rotate'] = self._random_rotate
-        grp['k'] = self._k
-        grp.attrs['mode'] = self._mode
+        grp["random_rotate"] = self._random_rotate
+        grp["k"] = self._k
+        grp.attrs["mode"] = self._mode
 
     def _get_centers(self):
-        '''The positions of the nuclei'''
+        """The positions of the nuclei"""
         return self._centers.view()
 
     centers = property(_get_centers)
 
     def _get_numbers(self):
-        '''The element numbers'''
+        """The element numbers"""
         return self._numbers.view()
 
     numbers = property(_get_numbers)
 
     def _get_pseudo_numbers(self):
-        '''The effective core charges'''
+        """The effective core charges"""
         return self._pseudo_numbers.view()
 
     pseudo_numbers = property(_get_pseudo_numbers)
 
     def _get_agspec(self):
-        '''The specifications of the atomic grids.'''
+        """The specifications of the atomic grids."""
         return self._agspec
 
     agspec = property(_get_agspec)
 
     def _get_k(self):
-        '''The order of the Becke switching function.'''
+        """The order of the Becke switching function."""
         return self._k
 
     k = property(_get_k)
 
     def _get_random_rotate(self):
-        '''The random rotation flag.'''
+        """The random rotation flag."""
         return self._random_rotate
 
     random_rotate = property(_get_random_rotate)
 
     def _get_mode(self):
-        '''The MO of this molecular grid'''
+        """The MO of this molecular grid"""
         return self._mode
 
     mode = property(_get_mode)
 
     def _get_becke_weights(self):
-        '''The becke weights of the grid points'''
+        """The becke weights of the grid points"""
         return self._becke_weights
 
     becke_weights = property(_get_becke_weights)
 
     def _log_init(self):
         if log.do_medium:
-            log('Initialized: %s' % self)
-            log.deflist([
-                ('Size', self.size),
-                ('Switching function', 'k=%i' % self._k),
-            ])
+            log("Initialized: %s" % self)
+            log.deflist(
+                [
+                    ("Size", self.size),
+                    ("Switching function", "k=%i" % self._k),
+                ]
+            )
             log.blank()
         # Cite reference
-        biblio.cite('becke1988_multicenter', 'the multicenter integration scheme used for the molecular integration grid')
-        biblio.cite('cordero2008', 'the covalent radii used for the Becke-Lebedev molecular integration grid')
+        biblio.cite(
+            "becke1988_multicenter",
+            "the multicenter integration scheme used for the molecular integration grid",
+        )
+        biblio.cite(
+            "cordero2008",
+            "the covalent radii used for the Becke-Lebedev molecular integration grid",
+        )
 
     @doc_inherit(IntGrid)
     def integrate(self, *args, **kwargs):
-        if self.mode == 'only':
-            raise NotImplementedError('When mode==\'only\', only the subgrids can be used for integration.')
+        if self.mode == "only":
+            raise NotImplementedError(
+                "When mode=='only', only the subgrids can be used for integration."
+            )
         return IntGrid.integrate(self, *args, **kwargs)

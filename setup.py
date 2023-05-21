@@ -155,7 +155,7 @@ for e in ext_modules:
 # --------------------
 
 setup(
-    name="horton-grid",
+    name="horton_grid",
     version="2.3.0",
     description="HORTON: Helpful Open-source Research TOol for N-fermion systems.",
     author="Toon Verstraelen",

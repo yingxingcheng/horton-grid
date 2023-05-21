@@ -25,17 +25,17 @@ __version__ = "2.3.0"
 
 
 # Extensions are imported first to call fpufix as early as possible
-from horton.cext import *
+from horton_grid.cext import *
 
-from horton.cache import *
-from horton.constants import *
-from horton.context import *
-from horton.exceptions import *
-from horton.grid import *
-from horton.io import *
-from horton.log import *
-from horton.moments import *
-from horton.periodic import *
-from horton.quadprog import *
-from horton.units import *
-from horton.utils import *
+from horton_grid.cache import *
+from horton_grid.constants import *
+from horton_grid.context import *
+from horton_grid.exceptions import *
+from horton_grid.grid import *
+from horton_grid.io import *
+from horton_grid.log import *
+from horton_grid.moments import *
+from horton_grid.periodic import *
+from horton_grid.quadprog import *
+from horton_grid.units import *
+from horton_grid.utils import *

@@ -30,7 +30,7 @@
 '''
 
 
-from horton.io.cube import *
-from horton.io.internal import *
-from horton.io.lockedh5 import *
-from horton.io.xyz import *
+from horton_grid.io.cube import *
+from horton_grid.io.internal import *
+from horton_grid.io.lockedh5 import *
+from horton_grid.io.xyz import *
