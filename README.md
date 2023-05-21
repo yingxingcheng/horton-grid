@@ -3,10 +3,17 @@ Copyright (C) 2011-2016 The HORTON Development Team
 
 For more information, visit HORTON's website: http://theochem.github.io/horton/latest
 
-HORTON 3 info:
+HORTON-GRID info:
 --------------
 
-HORTON-Grid is the integral grid implemented in Horton 2, but now it works with python 3.10+
+HORTON-GRID is the integral grid implemented in Horton 2, but now it works with python 3.10+
+
+Installation
+------------
+
+- git clone git@github.com:yingxingcheng/horton-grid.git
+- cd `horton-gird`
+- ./install.sh
 
 
 Acknowledgements
