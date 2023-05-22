@@ -24,9 +24,9 @@
 #define HORTON_GRID_EVALUATE_H
 
 
-#include "horton_grid/cell.h"
-#include "horton_grid/grid/cubic_spline.h"
-#include "horton_grid/grid/uniform.h"
+#include "../cell.h"
+#include "cubic_spline.h"
+#include "uniform.h"
 
 
 void eval_spline_grid(CubicSpline* spline, double* center, double* output,

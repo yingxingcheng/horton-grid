@@ -22,7 +22,7 @@
 
 cimport horton_grid.grid.uniform as uniform
 
-cdef extern from "horton_grid/grid/utils.h":
+cdef extern from "utils.h":
     void dot_multi(long npoint, long nvector, double** data, long* segments,
         double* output)
     void dot_multi_moments_cube(long nvector, double** data, uniform.UniformGrid* ugrid,

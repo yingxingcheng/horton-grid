@@ -20,7 +20,7 @@
 # --
 
 
-cdef extern from "horton_grid/grid/rtransform.h":
+cdef extern from "rtransform.h":
     cdef cppclass RTransform:
         RTransform(int npoint) except +
         double radius(double t)

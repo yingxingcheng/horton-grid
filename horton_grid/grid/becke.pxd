@@ -21,7 +21,7 @@
 
 #cython: language_level=3
 
-cdef extern from "horton_grid/grid/becke.h":
+cdef extern from "becke.h":
     void becke_helper_atom(int npoint, double* points, double* weights,
                            int natom, double* radii, double* centers, int
                            select, int order)

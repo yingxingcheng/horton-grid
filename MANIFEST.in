@@ -1,8 +1,5 @@
 recursive-include horton_grid *.pyx *.pxd *.h *.cpp
 recursive-exclude horton_grid cext.cpp
 
-include data/setup_cfgs/*.cfg
-include data/setup_cfgs/README
-
 include README
 include COPYING

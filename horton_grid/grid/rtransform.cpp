@@ -27,8 +27,8 @@
 
 #include <cmath>
 #include <stdexcept>
-#include "horton_grid/grid/cubic_spline.h"
-#include "horton_grid/grid/rtransform.h"
+#include "cubic_spline.h"
+#include "rtransform.h"
 
 
 /*

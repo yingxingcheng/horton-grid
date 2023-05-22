@@ -3,7 +3,3 @@ pre-commit
 pytest
 cython
 numpy
-scipy
-matplotlib
-quadprog==0.1.11
-cvxopt==1.3.1

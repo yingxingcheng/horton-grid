@@ -25,7 +25,7 @@
 
 #include <cstdint>
 
-#include "horton_grid/grid/rtransform.h"
+#include "rtransform.h"
 
 
 void tridiagsym_solve(double* diag_mid, double* diag_up, double* right, double* solution, int n);

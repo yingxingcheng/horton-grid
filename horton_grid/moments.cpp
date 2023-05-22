@@ -21,7 +21,7 @@
 
 #include <stdexcept>
 #include <cmath>
-#include "horton_grid/moments.h"
+#include "moments.h"
 
 
 long fill_cartesian_polynomials(double* output, long lmax) {

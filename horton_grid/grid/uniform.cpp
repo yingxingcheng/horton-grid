@@ -27,7 +27,7 @@
 #include <stdexcept>
 #include <cmath>
 #include <cstdlib>
-#include "horton_grid/grid/uniform.h"
+#include "uniform.h"
 
 
 UniformGrid::UniformGrid(double* _origin, double* _grid_rvecs, long* _shape, long* _pbc)

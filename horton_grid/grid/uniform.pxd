@@ -22,7 +22,7 @@
 
 cimport horton_grid.cell
 
-cdef extern from "horton_grid/grid/uniform.h":
+cdef extern from "uniform.h":
     cdef cppclass UniformGrid:
         double origin[3]
         double grid_rvecs[9]

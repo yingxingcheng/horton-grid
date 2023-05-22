@@ -22,125 +22,93 @@
 
 
 import numpy as np
-from distutils.command.install_data import install_data
-from distutils.command.install_headers import install_headers
+
 from setuptools import setup, Extension, find_packages
-from glob import glob
-import os
-import platform
-
-from Cython.Build import cythonize
+from setuptools.command.build_ext import build_ext
 
 
-# Utility functions
-# -----------------
-
-
-def get_sources(dirname):
-    """Get all cpp files and the cext.pyx file of a package"""
-    # avoid accidental inclusion of in-place build files and inc files
-    result = [
-        fn for fn in glob("%s/*.cpp" % dirname) if not (("ext.cpp" in fn) or ("_inc.cpp" in fn))
-    ]
-    result.append("%s/cext.pyx" % dirname)
-    return result
-
-
-def get_depends(dirname):
-    """Get all files that should trigger a recompilation of the C extension of a package"""
-    result = glob("%s/*.h" % dirname)
-    result += glob("%s/*.pxd" % dirname)
-    return result
-
-
-def get_headers():
-    """Get all header-like files that need to be installed"""
-    result = []
-    for dn in ["horton_grid/"] + glob("horton_grid/*/"):
-        result.extend(glob("%s/*.h" % dn))
-    return result
-
-
-class my_install_data(install_data):
-    """Add a datadir.txt file that points to the root for the data files. It is
-    otherwise impossible to figure out the location of these data files at
-    runtime.
-    """
-
-    def run(self):
-        # Do the normal install_data
-        install_data.run(self)
-        # Create the file datadir.txt. It's exact content is only known
-        # at installation time. By default, it is the installation prefix
-        # passed to setup.py, but one can override it using the env var
-        # INSTALL_DIR, which may be useful for packaging, or any other
-        # situation where the installed files are moved to a new location
-        # afterwards.
-        my_install_dir = os.getenv("INSTALL_DIR", self.install_dir)
-        # Loop over all packages in this project and write the data_dir.txt
-        # file only in the main package. Usualy, there is only one that matters.
-        dist = self.distribution
-        libdir = dist.command_obj["install_lib"].install_dir
-        for name in dist.packages:
-            # If a package contains a dot, e.g. horton.test, then don't write
-            # the file data_dir.txt.
-            if "." not in name:
-                destination = os.path.join(libdir, name, "data_dir.txt")
-                print("install_dir={}".format(my_install_dir))
-                print("Creating {}".format(destination))
-                if not self.dry_run:
-                    with open(destination, "w") as f:
-                        print(my_install_dir, file=f)
-
-
-class my_install_headers(install_headers):
-    def run(self):
-        headers = self.distribution.headers
-        if not headers:
-            return
-
-        self.mkpath(self.install_dir)
-        for header in headers:
-            dest = os.path.join(os.path.dirname(self.install_dir), header)
-            dest_dn = os.path.dirname(dest)
-            if not os.path.isdir(dest_dn):
-                self.mkpath(dest_dn)
-            (out, _) = self.copy_file(header, dest)
-            self.outfiles.append(out)
-
-
-# Print the Machine name on screen
-# --------------------------------
-
-print("PLATFORM={}".format(platform.platform()))
-
-
-# Define extension modules
-# ------------------------
+# Read requirements.txt, ignore comments
+with open("requirements.txt") as f:
+    requirements = []
+    for line in f:
+        if line[0] != "#":
+            requirements.append(line.strip())
 
 ext_modules = [
     Extension(
         "horton_grid.cext",
-        sources=get_sources("horton_grid"),
-        depends=get_depends("horton_grid"),
-        include_dirs=[np.get_include(), "."],
-        extra_compile_args=["-std=c++11"],
+        sources=[
+            "horton_grid/cext.pyx",
+            # "horton_grid/cext.cpp",
+            "horton_grid/cell.cpp",
+            "horton_grid/moments.cpp",
+            "horton_grid/nucpot.cpp",
+        ],
+        depends=[
+            # headers
+            "horton_grid/cext.h",
+            "horton_grid/cell.h",
+            "horton_grid/nucpot.h",
+            "horton_grid/moments.h",
+            # pxd
+            "horton_grid/nucpot.pxd",
+            "horton_grid/moments.pxd",
+            "horton_grid/cell.pxd",
+            "horton_grid/cext.pxd",
+        ],
+        include_dirs=[
+            np.get_include(),
+            "horton_grid",
+        ],
         language="c++",
+        extra_compile_args=["-std=c++11"],  # example compiler arguments
     ),
     Extension(
         "horton_grid.grid.cext",
-        sources=get_sources("horton_grid/grid")
-        + ["horton_grid/cell.cpp", "horton_grid/moments.cpp"],
-        depends=get_depends("horton_grid/grid")
+        sources=[
+            "horton_grid/grid/cext.pyx",
+            "horton_grid/grid/becke.cpp",
+            "horton_grid/grid/cubic_spline.cpp",
+            "horton_grid/grid/evaluate.cpp",
+            "horton_grid/grid/lebedev_laikov.cpp",
+            "horton_grid/grid/ode2.cpp",
+            "horton_grid/grid/rtransform.cpp",
+            "horton_grid/grid/uniform.cpp",
+            "horton_grid/grid/utils.cpp",
+        ],
+        depends=[
+            "horton_grid/grid/cext.h",
+            "horton_grid/grid/cext.pxd",
+            "horton_grid/grid/becke.h",
+            "horton_grid/grid/becke.pxd",
+            "horton_grid/grid/cubic_spline.h",
+            "horton_grid/grid/cubic_spline.pxd",
+            "horton_grid/grid/evaluate.h",
+            "horton_grid/grid/evaluate.pxd",
+            "horton_grid/grid/lebedev_laikov.h",
+            "horton_grid/grid/lebedev_laikov.pxd",
+            "horton_grid/grid/ode2.h",
+            "horton_grid/grid/ode2.pxd",
+            "horton_grid/grid/rtransform.h",
+            "horton_grid/grid/rtransform.pxd",
+            "horton_grid/grid/uniform.h",
+            "horton_grid/grid/uniform.pxd",
+            "horton_grid/grid/utils.h",
+            "horton_grid/grid/utils.pxd",
+        ]
         + [
             "horton_grid/cell.pxd",
             "horton_grid/cell.h",
             "horton_grid/moments.pxd",
             "horton_grid/moments.h",
         ],
-        include_dirs=[np.get_include(), "."],
-        extra_compile_args=["-std=c++11"],
+        include_dirs=[
+            np.get_include(),
+            "horton_grid",
+            "horton_grid/grid",
+        ],
         language="c++",
+        extra_compile_args=["-std=c++11"],
     ),
 ]
 
@@ -148,57 +116,30 @@ for e in ext_modules:
     e.cython_directives = {"embedsignature": True}
 
 if __name__ == "__main__":
-    # Call distutils setup
-    # --------------------
-
     setup(
-        name="horton-grid",
+        name="horton_grid",
         version="2.3.0",
-        description="HORTON: Helpful Open-source Research TOol for N-fermion systems.",
-        author="Toon Verstraelen",
-        author_email="Toon.Verstraelen@UGent.be",
-        url="http://yingxingcheng.github.com/horton-grid/",
-        package_dir={"horton_grid": "horton_grid"},
-        packages=find_packages(),
-        cmdclass={
-            "install_data": my_install_data,
-            "install_headers": my_install_headers,
-        },
-        data_files=[
-            ("share/horton_grid", glob("data/*.*")),
-            ("share/horton_grid/test", glob("data/test/*.*")),
-            ("share/horton_grid/basis", glob("data/basis/*.*")),
-            ("share/horton_grid/grids", glob("data/grids/*.txt")),
-        ]
-        + [
-            (
-                "share/horton_grid/examples/{}".format(os.path.basename(dn[:-1])),
-                glob(f"{dn}/*.py") + glob(f"{dn}/README"),
-            )
-            for dn in glob("data/examples/*/")
-        ]
-        + [
-            ("include/horton_grid", glob("horton_grid/*.h")),
-            ("include/horton_grid/grid", glob("horton_grid/grid/*.h")),
-        ],
-        package_data={
-            "horton_grid": ["*.pxd"],
-            "horton_grid.grid": ["*.pxd"],
-        },
-        ext_modules=cythonize(ext_modules),
-        headers=get_headers(),
+        author="Your Name",
+        author_email="your.email@domain.com",
+        url="https://github.com/yourusername/horton_grid",
+        description="A detailed description of your project",
+        long_description="README",
+        long_description_content_type="text/markdown",
+        license="Your License",
         classifiers=[
             "Development Status :: 3 - Alpha",
-            "Environment :: Console",
             "Intended Audience :: Science/Research",
-            "License :: OSI Approved :: GNU General Public License (GPL)",
-            "Operating System :: POSIX :: Linux",
+            "License :: OSI Approved :: MIT License",
             "Programming Language :: Python :: 3",
-            "Programming Language :: Cython",
-            "Programming Language :: C++",
-            "Topic :: Science/Engineering :: Molecular Science",
+            "Programming Language :: Python :: 3.10",
         ],
-        install_requires=[
-            "numpy",
-        ],
+        packages=find_packages(),
+        package_data={
+            "horton_grid": ["data/*.*", "data/grids/*.*", "data/test/*.*", "data/examples/*.py"],
+        },
+        include_package_data=True,
+        python_requires=">=3.10",
+        install_requires=requirements,
+        ext_modules=ext_modules,
+        cmdclass={"build_ext": build_ext},
     )

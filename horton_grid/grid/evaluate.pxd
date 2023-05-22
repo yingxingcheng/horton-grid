@@ -24,7 +24,7 @@
 cimport horton_grid.cell
 cimport horton_grid.grid.cubic_spline as cubic_spline
 
-cdef extern from "horton_grid/grid/evaluate.h":
+cdef extern from "evaluate.h":
     void eval_spline_grid(cubic_spline.CubicSpline* spline, double* center,
         double* output, double* points, horton_grid.cell.Cell* cell,
         long npoint)

@@ -45,7 +45,7 @@
 #include <cmath>
 #include <cstring>
 #include <stdexcept>
-#include "horton_grid/grid/cubic_spline.h"
+#include "cubic_spline.h"
 
 
 /*

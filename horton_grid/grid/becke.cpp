@@ -27,7 +27,7 @@
 #include <cmath>
 #include <stdexcept>
 
-#include "horton_grid/grid/becke.h"
+#include "becke.h"
 
 
 /* dist

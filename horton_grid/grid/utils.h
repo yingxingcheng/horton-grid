@@ -23,7 +23,7 @@
 #ifndef HORTON_GRID_UTILS_H
 #define HORTON_GRID_UTILS_H
 
-#include "horton_grid/grid/uniform.h"
+#include "uniform.h"
 
 void dot_multi(long npoint, long nvector, double** data, long* segments,
     double* output);
