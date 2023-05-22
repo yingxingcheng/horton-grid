@@ -48,9 +48,7 @@ def check_g_lincomb_dot_rvecs(cell):
 
 
 def test_cell_cubic():
-    rvecs = (
-        np.array([[9.865, 0.0, 0.0], [0.0, 9.865, 0.0], [0.0, 0.0, 9.865]]) * angstrom
-    )
+    rvecs = np.array([[9.865, 0.0, 0.0], [0.0, 9.865, 0.0], [0.0, 0.0, 9.865]]) * angstrom
     cell = Cell(rvecs)
 
     # Test attributes
@@ -123,10 +121,7 @@ def test_cell_parallellogram2d():
     # Test attributes
     assert cell.nvec == 2
     assert (cell.rvecs == rvecs).all()
-    assert (
-        abs(cell.volume - np.linalg.norm(np.cross(cell.rvecs[0], cell.rvecs[1])))
-        < 1e-10
-    )
+    assert abs(cell.volume - np.linalg.norm(np.cross(cell.rvecs[0], cell.rvecs[1]))) < 1e-10
     assert abs(np.dot(cell.gvecs, cell.rvecs.transpose()) - np.identity(2)).max() < 1e-5
     for i in range(2):
         assert cell.get_rlength(i) == cell.rlengths[i]
@@ -190,9 +185,7 @@ def test_cell_1d():
 
 def test_cell_quartz():
     cell = Cell(
-        np.array(
-            [[0.0, 0.0, 5.405222], [0.0, 4.913416, 0.0], [-4.255154, 2.456708, 0.0]]
-        )
+        np.array([[0.0, 0.0, 5.405222], [0.0, 4.913416, 0.0], [-4.255154, 2.456708, 0.0]])
         * angstrom
     )
 

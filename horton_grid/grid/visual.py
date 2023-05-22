@@ -122,8 +122,7 @@ class RectangleGrid(IntGrid):
         points = np.zeros((size, 3), float)
         weights = np.empty(size, float)
         weights[:] = np.sqrt(
-            (np.linalg.norm(axis0) * np.linalg.norm(axis1)) ** 2
-            - np.dot(axis0, axis1) ** 2
+            (np.linalg.norm(axis0) * np.linalg.norm(axis1)) ** 2 - np.dot(axis0, axis1) ** 2
         )
         counter = 0
         for i0 in range(l0, h0 + 1):

@@ -180,10 +180,7 @@ def test_agspec_coarse_contents():
         == "PowerRTransform 7.0879993828935345e-06 16.05937640019924 20"
     )
     assert (
-        nlls
-        == np.array(
-            [6, 6, 6, 6, 6, 6, 6, 14, 14, 26, 38, 50, 86, 86, 86, 86, 50, 14, 6, 6]
-        )
+        nlls == np.array([6, 6, 6, 6, 6, 6, 6, 14, 14, 26, 38, 50, 86, 86, 86, 86, 50, 14, 6, 6])
     ).all()
 
 
@@ -307,9 +304,7 @@ def test_spherical_average_hydrogen_1s():
         (1, 1, 0, 0),
         (0, 1, 0, 1),
     ):
-        sa_fn = ag.get_spherical_average(
-            fn + cx * x + cy * y + cz * z + cxxx * x * x * x
-        )
+        sa_fn = ag.get_spherical_average(fn + cx * x + cy * y + cz * z + cxxx * x * x * x)
         assert abs(sa_fn - sa_check).max() < 1e-10
 
 

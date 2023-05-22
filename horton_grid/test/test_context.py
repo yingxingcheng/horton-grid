@@ -42,9 +42,7 @@ def test_data_files():
     # to detect mistakes in the development process.
     if context.data_dir == os.path.abspath("data/") and os.path.isdir(".git"):
         lines = (
-            subprocess.check_output(
-                ["git", "ls-files", "--others", "--exclude-standard", "data"]
-            )
+            subprocess.check_output(["git", "ls-files", "--others", "--exclude-standard", "data"])
             .decode("utf-8")
             .split("\n")
         )

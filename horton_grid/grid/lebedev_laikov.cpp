@@ -83,7 +83,7 @@
 #include <cmath>
 #include <stdexcept>
 
-#include "horton/grid/lebedev_laikov.h"
+#include "horton_grid/grid/lebedev_laikov.h"
 
 
 #define NMAX 65

@@ -275,9 +275,7 @@ class ScreenLog(object):
 
         A progress bar is only active at the medium level.
         """
-        return ProgressBar(
-            niter, self._file, self.width, silent=self._level != self.medium
-        )
+        return ProgressBar(niter, self._file, self.width, silent=self._level != self.medium)
 
     def print_header(self):
         """Print the first screen output."""

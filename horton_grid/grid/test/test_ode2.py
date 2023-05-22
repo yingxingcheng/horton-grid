@@ -53,44 +53,32 @@ def test_hermite_overlap2():
         10, 2 * 6 + 0, True, 2 * 5 + 0, True
     )
     # anti-symmetry
-    assert hermite_overlap2(
-        10, 2 * 5 + 0, False, 2 * 6 + 1, False
-    ) == -hermite_overlap2(10, 2 * 6 + 0, False, 2 * 5 + 1, False)
+    assert hermite_overlap2(10, 2 * 5 + 0, False, 2 * 6 + 1, False) == -hermite_overlap2(
+        10, 2 * 6 + 0, False, 2 * 5 + 1, False
+    )
     assert hermite_overlap2(10, 2 * 5 + 0, True, 2 * 6 + 1, True) == -hermite_overlap2(
         10, 2 * 6 + 0, True, 2 * 5 + 1, True
     )
     # xmax
-    assert 2 * hermite_overlap2(
-        8, 2 * 0 + 0, False, 2 * 0 + 0, False
-    ) == hermite_overlap2(8, 2 * 4 + 0, False, 2 * 4 + 0, False)
-    assert 2 * hermite_overlap2(
-        8, 2 * 8 + 0, False, 2 * 8 + 0, False
-    ) == hermite_overlap2(8, 2 * 4 + 0, False, 2 * 4 + 0, False)
+    assert 2 * hermite_overlap2(8, 2 * 0 + 0, False, 2 * 0 + 0, False) == hermite_overlap2(
+        8, 2 * 4 + 0, False, 2 * 4 + 0, False
+    )
+    assert 2 * hermite_overlap2(8, 2 * 8 + 0, False, 2 * 8 + 0, False) == hermite_overlap2(
+        8, 2 * 4 + 0, False, 2 * 4 + 0, False
+    )
 
 
 def test_hermite_overlap3():
     # things that should be zero
-    assert (
-        hermite_overlap3(10, 2 * 5 + 0, False, 2 * 5 + 0, False, 2 * 7 + 0, False) == 0
-    )
-    assert (
-        hermite_overlap3(10, 2 * 5 + 0, False, 2 * 6 + 0, False, 2 * 7 + 0, False) == 0
-    )
+    assert hermite_overlap3(10, 2 * 5 + 0, False, 2 * 5 + 0, False, 2 * 7 + 0, False) == 0
+    assert hermite_overlap3(10, 2 * 5 + 0, False, 2 * 6 + 0, False, 2 * 7 + 0, False) == 0
     # things that should be zero (uneven integrand)
-    assert (
-        hermite_overlap3(10, 2 * 5 + 0, False, 2 * 5 + 0, False, 2 * 5 + 0, True) == 0
-    )
-    assert (
-        hermite_overlap3(10, 2 * 5 + 0, False, 2 * 5 + 1, False, 2 * 5 + 0, False) == 0
-    )
+    assert hermite_overlap3(10, 2 * 5 + 0, False, 2 * 5 + 0, False, 2 * 5 + 0, True) == 0
+    assert hermite_overlap3(10, 2 * 5 + 0, False, 2 * 5 + 1, False, 2 * 5 + 0, False) == 0
     # things that should be non-zero (even integrand)
-    assert (
-        hermite_overlap3(10, 2 * 5 + 0, False, 2 * 5 + 0, False, 2 * 5 + 0, False) != 0
-    )
+    assert hermite_overlap3(10, 2 * 5 + 0, False, 2 * 5 + 0, False, 2 * 5 + 0, False) != 0
     assert hermite_overlap3(10, 2 * 5 + 0, True, 2 * 5 + 0, False, 2 * 5 + 0, True) != 0
-    assert (
-        hermite_overlap3(10, 2 * 5 + 1, False, 2 * 5 + 0, False, 2 * 5 + 1, False) != 0
-    )
+    assert hermite_overlap3(10, 2 * 5 + 1, False, 2 * 5 + 0, False, 2 * 5 + 1, False) != 0
 
 
 def test_hermite_node():
@@ -286,13 +274,7 @@ def test_poisson_s_identity():
     x = np.arange(0, npoint, dtype=float)
     sigma = 15.0
     rhoy = np.exp(-0.5 * (x / sigma) ** 2) / sigma**3 / (2 * np.pi) ** 1.5
-    rhod = (
-        np.exp(-0.5 * (x / sigma) ** 2)
-        / sigma**3
-        / (2 * np.pi) ** 1.5
-        * (-x / sigma)
-        / sigma
-    )
+    rhod = np.exp(-0.5 * (x / sigma) ** 2) / sigma**3 / (2 * np.pi) ** 1.5 * (-x / sigma) / sigma
 
     # input for the solver
     fy = -4 * np.pi * x * rhoy
@@ -309,12 +291,7 @@ def test_poisson_s_identity():
     solution = np.linalg.solve(coeffs, rhs)
 
     soly = erf(x / (np.sqrt(2) * sigma))
-    sold = (
-        np.exp(-((x / (np.sqrt(2) * sigma)) ** 2))
-        * 2
-        / np.sqrt(np.pi)
-        / (np.sqrt(2) * sigma)
-    )
+    sold = np.exp(-((x / (np.sqrt(2) * sigma)) ** 2)) * 2 / np.sqrt(np.pi) / (np.sqrt(2) * sigma)
 
     assert abs(solution[::2] - soly).max() < 2e-3
     assert abs(solution[1::2] - sold).max() < 2e-3
@@ -326,13 +303,7 @@ def test_poisson_s_exp():
     x = rtf.get_radii()
     sigma = 1.0
     rhoy = np.exp(-0.5 * (x / sigma) ** 2) / sigma**3 / (2 * np.pi) ** 1.5
-    rhod = (
-        np.exp(-0.5 * (x / sigma) ** 2)
-        / sigma**3
-        / (2 * np.pi) ** 1.5
-        * (-x / sigma)
-        / sigma
-    )
+    rhod = np.exp(-0.5 * (x / sigma) ** 2) / sigma**3 / (2 * np.pi) ** 1.5 * (-x / sigma) / sigma
 
     # input for the solver
     fy = -4 * np.pi * x * rhoy
@@ -355,12 +326,7 @@ def test_poisson_s_exp():
     solution[1::2] /= j1
 
     soly = erf(x / (np.sqrt(2) * sigma))
-    sold = (
-        np.exp(-((x / (np.sqrt(2) * sigma)) ** 2))
-        * 2
-        / np.sqrt(np.pi)
-        / (np.sqrt(2) * sigma)
-    )
+    sold = np.exp(-((x / (np.sqrt(2) * sigma)) ** 2)) * 2 / np.sqrt(np.pi) / (np.sqrt(2) * sigma)
 
     assert abs(solution[::2] - soly).max() < 2e-3
     assert abs(solution[1::2] - sold).max() < 2e-3
@@ -374,13 +340,7 @@ def check_solve_s(rtf, sigma=1.0, epsy=1e-6, epsd=1e-3):
     a = CubicSpline(z, z, rtf)
 
     rhoy = np.exp(-0.5 * (x / sigma) ** 2) / sigma**3 / (2 * np.pi) ** 1.5
-    rhod = (
-        np.exp(-0.5 * (x / sigma) ** 2)
-        / sigma**3
-        / (2 * np.pi) ** 1.5
-        * (-x / sigma)
-        / sigma
-    )
+    rhod = np.exp(-0.5 * (x / sigma) ** 2) / sigma**3 / (2 * np.pi) ** 1.5 * (-x / sigma) / sigma
     fy = -4 * np.pi * x * rhoy
     fd = -4 * np.pi * (rhoy + x * rhod)
     f = CubicSpline(fy, fd, rtf)
@@ -390,12 +350,7 @@ def check_solve_s(rtf, sigma=1.0, epsy=1e-6, epsd=1e-3):
     u = solve_ode2(b, a, f, bcs)
 
     soly = erf(x / (np.sqrt(2) * sigma))
-    sold = (
-        np.exp(-((x / (np.sqrt(2) * sigma)) ** 2))
-        * 2
-        / np.sqrt(np.pi)
-        / (np.sqrt(2) * sigma)
-    )
+    sold = np.exp(-((x / (np.sqrt(2) * sigma)) ** 2)) * 2 / np.sqrt(np.pi) / (np.sqrt(2) * sigma)
     assert abs(u.y - soly).max() / abs(soly).max() < epsy
     assert abs(u.dx - sold).max() / abs(sold).max() < epsd
 
@@ -424,13 +379,7 @@ def check_solve_s2(rtf, sigma=1.0, epsy=1e-10, epsd=1e-10):
     a = CubicSpline(z, z, rtf)
 
     rhoy = np.exp(-0.5 * (r / sigma) ** 2) / sigma**3 / (2 * np.pi) ** 1.5
-    rhod = (
-        np.exp(-0.5 * (r / sigma) ** 2)
-        / sigma**3
-        / (2 * np.pi) ** 1.5
-        * (-r / sigma)
-        / sigma
-    )
+    rhod = np.exp(-0.5 * (r / sigma) ** 2) / sigma**3 / (2 * np.pi) ** 1.5 * (-r / sigma) / sigma
     fy = -4 * np.pi * rhoy
     fd = -4 * np.pi * rhod
     f = CubicSpline(fy, fd, rtf)
@@ -441,9 +390,7 @@ def check_solve_s2(rtf, sigma=1.0, epsy=1e-10, epsd=1e-10):
 
     s2s = np.sqrt(2) * sigma
     soly = erf(r / s2s) / r
-    sold = (
-        np.exp(-((r / s2s) ** 2)) * 2 / np.sqrt(np.pi) / s2s / r - erf(r / s2s) / r**2
-    )
+    sold = np.exp(-((r / s2s) ** 2)) * 2 / np.sqrt(np.pi) / s2s / r - erf(r / s2s) / r**2
     if False:
         print(abs(u.y - soly).max() / abs(soly).max())
         print(abs(u.dx - sold).max() / abs(sold).max())

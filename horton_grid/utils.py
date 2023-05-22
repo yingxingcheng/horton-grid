@@ -79,12 +79,8 @@ def typecheck_geo(
         if need_coordinates:
             raise TypeError("Coordinates can not be None.")
     else:
-        if coordinates.shape != (natom, 3) or not np.issubdtype(
-            coordinates.dtype, float
-        ):
-            raise TypeError(
-                "The argument centers must be a float array with shape (natom,3)."
-            )
+        if coordinates.shape != (natom, 3) or not np.issubdtype(coordinates.dtype, float):
+            raise TypeError("The argument centers must be a float array with shape (natom,3).")
 
     # Typecheck numbers
     if numbers is None:
@@ -100,9 +96,7 @@ def typecheck_geo(
             pseudo_numbers = numbers.astype(float)
     else:
         if pseudo_numbers.shape != (natom,):
-            raise TypeError(
-                "The argument pseudo_numbers must be a vector with length natom."
-            )
+            raise TypeError("The argument pseudo_numbers must be a vector with length natom.")
         if not issubclass(pseudo_numbers.dtype.type, float):
             pseudo_numbers = pseudo_numbers.astype(float)
 
@@ -134,9 +128,7 @@ def check_type(name, instance, *Classes):
          A list of allowed types.
     """
     if len(Classes) == 0:
-        raise TypeError(
-            "Type checking with an empty list of classes. This is a simple bug!"
-        )
+        raise TypeError("Type checking with an empty list of classes. This is a simple bug!")
     match = False
     for Class in Classes:
         if isinstance(instance, Class):

@@ -275,9 +275,7 @@ def test_exp_string():
 
 
 def test_power_string():
-    rtf1 = PowerRTransform(
-        np.random.uniform(1e-3, 5e-3), np.random.uniform(2.0, 5.0), 11
-    )
+    rtf1 = PowerRTransform(np.random.uniform(1e-3, 5e-3), np.random.uniform(2.0, 5.0), 11)
     s = rtf1.to_string()
     rtf2 = RTransform.from_string(s)
     assert rtf1.rmin == rtf2.rmin

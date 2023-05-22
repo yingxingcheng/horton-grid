@@ -25,7 +25,7 @@
 #endif
 #include <cstddef>
 #include <cstdlib>
-#include "horton/grid/ode2.h"
+#include "horton_grid/grid/ode2.h"
 
 
 double get_value(const double* store, long index) {

@@ -226,13 +226,9 @@ def check_constrained_problem(a, b, r=None, s=None):
         if nl > nx:
             raise TypeError("There must not be more constraints than unknowns.")
         if r.shape != (nl, nx):
-            raise TypeError(
-                "The shape of the equality constraints coefficients array is wrong."
-            )
+            raise TypeError("The shape of the equality constraints coefficients array is wrong.")
         if s.shape != (nl,):
-            raise TypeError(
-                "The target vector of the inequality constraints has the wrong shape."
-            )
+            raise TypeError("The target vector of the inequality constraints has the wrong shape.")
     return a, b, r, s
 
 
@@ -288,9 +284,7 @@ def diagonal_form(a, b, r=None, s=None):
         u, singvals, vt = np.linalg.svd(r, full_matrices=True)
         rank = (singvals != 0).sum()
         if rank == 0:
-            raise FeasibilityError(
-                "Constraints could not be satisfied in diagonal_form."
-            )
+            raise FeasibilityError("Constraints could not be satisfied in diagonal_form.")
         singvals = singvals[:rank]
         u = u[:rank]
         basis = vt[rank:]  # rows are basis of the orthogonal complement
@@ -478,9 +472,7 @@ def solve_radius(a, b, center, radius, r=None, s=None):
 
         # 1d root finder, it guarantees that the last call to error is done
         # with the returned ridge parameter
-        ridge, error = find_1d_root(
-            compute_error, (ridge0, error0), (ridge1, error1), eps1d
-        )
+        ridge, error = find_1d_root(compute_error, (ridge0, error0), (ridge1, error1), eps1d)
     else:
         ridge = ridge0
 
@@ -569,13 +561,9 @@ class QPSolver(object):
         self.check_feasible(x)
         gradient, rmsd_free, rmsd_frozen, rmsd_neg = self.get_rmsds(x)
         if rmsd_free > self.eps:
-            raise ValueError(
-                "The error on the gradient of the free components is too large."
-            )
+            raise ValueError("The error on the gradient of the free components is too large.")
         if rmsd_frozen > self.eps:
-            raise ValueError(
-                "The error on the gradient of the frozen components is too large."
-            )
+            raise ValueError("The error on the gradient of the frozen components is too large.")
         if rmsd_neg > self.eps:
             raise ValueError("Some components are too negative.")
 
@@ -607,9 +595,7 @@ class QPSolver(object):
             self._free = free.copy()
             self._nfree = free.sum()
             nfree = self._nfree
-            assert (
-                nfree >= self.nl
-            )  # more constraints than free params does not make sense
+            assert nfree >= self.nl  # more constraints than free params does not make sense
             # Slice the matrices an keep them as attributes for later
             self._a_free = self.a[free, :][:, free]
             self._b_free = self.b[free]
@@ -812,11 +798,7 @@ class QPSolver(object):
         for counter in range(maxiter):
             # check for convergence
             gradient, rmsd_free, rmsd_frozen, rmsd_neg = self.get_rmsds(x)
-            if (
-                (rmsd_free < self.eps)
-                and (rmsd_frozen < self.eps)
-                and (rmsd_neg < self.eps)
-            ):
+            if (rmsd_free < self.eps) and (rmsd_frozen < self.eps) and (rmsd_neg < self.eps):
                 self.check_solution(x)
                 return cost, x
 

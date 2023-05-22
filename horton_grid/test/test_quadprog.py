@@ -835,9 +835,7 @@ def test_brute_case5():
         ),
         np.array([1.0]),
     )
-    assert qps.compute_cost(np.array([1.0, 0.0])) > qps.compute_cost(
-        np.array([0.0, 1.0])
-    )
+    assert qps.compute_cost(np.array([1.0, 0.0])) > qps.compute_cost(np.array([0.0, 1.0]))
     cost, x = qps.find_brute()
     qps.check_solution(x)
 
@@ -1223,9 +1221,7 @@ def test_local_case1():
         ),
         np.array([0.65794380142477105, 0.038165380592388352]),
     )
-    guess = np.array(
-        [1.4709241946911222, 0.058506557259324535, 0.33484947848787516, 0.0, 0.0, 0.0]
-    )
+    guess = np.array([1.4709241946911222, 0.058506557259324535, 0.33484947848787516, 0.0, 0.0, 0.0])
     cost, x = qps.find_local(guess, 1.0)
     qps.check_solution(x)
 

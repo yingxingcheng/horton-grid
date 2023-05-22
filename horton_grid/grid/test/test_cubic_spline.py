@@ -291,14 +291,9 @@ def test_extrapolation1_exp():
     cs = CubicSpline(y, d, rtf)
     newx = np.array([0.001, 0.01])
     assert abs(cs(newx) - np.exp(-0.3 * newx)).max() < 1e-10
-    assert (
-        abs(cs.extrapolation.eval_left(newx[0]) - np.exp(-0.3 * newx[0])).max() < 1e-10
-    )
+    assert abs(cs.extrapolation.eval_left(newx[0]) - np.exp(-0.3 * newx[0])).max() < 1e-10
     assert abs(cs.deriv(newx) - -0.3 * np.exp(-0.3 * newx)).max() < 1e-10
-    assert (
-        abs(cs.extrapolation.deriv_left(newx[0]) - -0.3 * np.exp(-0.3 * newx[0])).max()
-        < 1e-10
-    )
+    assert abs(cs.extrapolation.deriv_left(newx[0]) - -0.3 * np.exp(-0.3 * newx[0])).max() < 1e-10
     newx = np.array([1.1, 10.1])
     assert abs(cs(newx)).max() < 1e-10
     assert abs(cs.deriv(newx)).max() < 1e-10
@@ -466,9 +461,7 @@ def test_extrapolation_exp_potential():
         newx = np.array([10.5, 11.5])
         amp_right = cs.extrapolation.amp_right
         np.testing.assert_allclose(cs(newx), amp_right / newx ** (l + 1))
-        np.testing.assert_allclose(
-            cs.deriv(newx), -(l + 1) * amp_right / newx ** (l + 2)
-        )
+        np.testing.assert_allclose(cs.deriv(newx), -(l + 1) * amp_right / newx ** (l + 2))
 
 
 def test_consistency_h5():

@@ -142,9 +142,7 @@ def test_grid_integrate_pure_moments():
     assert abs(ints[1] - (grid.weights * dens * z).sum()) < 1e-10
     assert abs(ints[2] - (grid.weights * dens * x).sum()) < 1e-10
     assert abs(ints[3] - (grid.weights * dens * y).sum()) < 1e-10
-    assert (
-        abs(ints[4] - (grid.weights * dens * (1.5 * z**2 - 0.5 * r2)).sum()) < 1e-10
-    )
+    assert abs(ints[4] - (grid.weights * dens * (1.5 * z**2 - 0.5 * r2)).sum()) < 1e-10
     assert abs(ints[5] - (grid.weights * dens * (3.0**0.5 * x * z)).sum()) < 1e-10
     assert abs(ints[8] - (grid.weights * dens * (3.0**0.5 * x * y)).sum()) < 1e-10
 
@@ -169,25 +167,14 @@ def test_grid_integrate_pure_moments_segments():
         assert abs(ints[i, 2] - (grid.weights * dens * x)[begin:end].sum()) < 1e-10
         assert abs(ints[i, 3] - (grid.weights * dens * y)[begin:end].sum()) < 1e-10
         assert (
-            abs(
-                ints[i, 4]
-                - (grid.weights * dens * (1.5 * z**2 - 0.5 * r2))[begin:end].sum()
-            )
+            abs(ints[i, 4] - (grid.weights * dens * (1.5 * z**2 - 0.5 * r2))[begin:end].sum())
             < 1e-10
         )
         assert (
-            abs(
-                ints[i, 5]
-                - (grid.weights * dens * (3.0**0.5 * x * z))[begin:end].sum()
-            )
-            < 1e-10
+            abs(ints[i, 5] - (grid.weights * dens * (3.0**0.5 * x * z))[begin:end].sum()) < 1e-10
         )
         assert (
-            abs(
-                ints[i, 8]
-                - (grid.weights * dens * (3.0**0.5 * x * y))[begin:end].sum()
-            )
-            < 1e-10
+            abs(ints[i, 8] - (grid.weights * dens * (3.0**0.5 * x * y))[begin:end].sum()) < 1e-10
         )
 
 
@@ -401,9 +388,7 @@ def test_density_decomposition_n2():
     last_error = None
     for lmax in range(0, lmaxmax + 1):
         output = np.zeros(atgrid.size)
-        atgrid.eval_decomposition(
-            splines[: (lmax + 1) ** 2], mol.coordinates[0], output
-        )
+        atgrid.eval_decomposition(splines[: (lmax + 1) ** 2], mol.coordinates[0], output)
         if lmax in checks:
             error = np.sqrt(atgrid.integrate((output - checks[lmax]) ** 2))
             assert abs(error) < 1e-12

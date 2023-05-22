@@ -62,11 +62,7 @@ def test_integrate_hydrogen_trimer_1s():
     dist0 = np.sqrt(((coordinates[0] - mg.points) ** 2).sum(axis=1))
     dist1 = np.sqrt(((coordinates[1] - mg.points) ** 2).sum(axis=1))
     dist2 = np.sqrt(((coordinates[2] - mg.points) ** 2).sum(axis=1))
-    fn = (
-        np.exp(-2 * dist0) / np.pi
-        + np.exp(-2 * dist1) / np.pi
-        + np.exp(-2 * dist2) / np.pi
-    )
+    fn = np.exp(-2 * dist0) / np.pi + np.exp(-2 * dist1) / np.pi + np.exp(-2 * dist2) / np.pi
     occupation = mg.integrate(fn)
     assert abs(occupation - 3.0) < 1e-3
 

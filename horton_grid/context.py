@@ -66,13 +66,11 @@ class Context(object):
                 with open(fn_data_dir) as f:
                     self.include_dir = os.path.join(
                         f.read().strip(),
-                        "include/python%i.%i"
-                        % (sys.version_info.major, sys.version_info.minor),
+                        "include/python%i.%i" % (sys.version_info.major, sys.version_info.minor),
                     )
         if not os.path.isdir(self.data_dir):
             raise IOError(
-                "Can not find the data files. The directory %s does not exist."
-                % self.data_dir
+                "Can not find the data files. The directory %s does not exist." % self.data_dir
             )
 
     def get_fn(self, filename):

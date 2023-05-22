@@ -99,9 +99,7 @@ def check_script(command, workdir):
         env["HORTONDATA"] = os.path.join(root_dir, "data")
     env["PATH"] = os.path.join(root_dir, "scripts") + ":" + env.get("PATH", "")
     try:
-        proc = subprocess.run(
-            command, cwd=workdir, env=env, capture_output=True, shell=True
-        )
+        proc = subprocess.run(command, cwd=workdir, env=env, capture_output=True, shell=True)
         outdata, errdata = proc.stdout, proc.stderr
     except OSError:
         raise AssertionError("Executable not found.")

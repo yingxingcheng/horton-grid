@@ -285,9 +285,7 @@ class Cache(object):
                 "The optional arguments alloc and default can not be used at the same time."
             )
         if tags is not None and alloc is None:
-            raise TypeError(
-                "The tags argument is only allowed when the alloc argument is present."
-            )
+            raise TypeError("The tags argument is only allowed when the alloc argument is present.")
         if len(kwargs) > 0:
             raise TypeError("Unknown optional arguments: %s" % list(kwargs.keys()))
 

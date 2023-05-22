@@ -64,9 +64,7 @@ def test_solve_poisson_becke_n2():
     for lmax in range(0, lmaxmax + 1):
         result = molgrid.zeros()
         for i in range(mol.natom):
-            molgrid.eval_decomposition(
-                hds[i][: (lmax + 1) ** 2], mol.coordinates[i], result
-            )
+            molgrid.eval_decomposition(hds[i][: (lmax + 1) ** 2], mol.coordinates[i], result)
         potential_error = result - reference
         error = molgrid.integrate(potential_error, potential_error) ** 0.5
         if last_error is not None:
@@ -85,10 +83,7 @@ def test_solve_poisson_becke_n2():
                 mask = ((rho >= rho_low) & (rho < rho_high)).astype(float)
                 error = molgrid.integrate(potential_error, potential_error, mask) ** 0.5
                 worst = molgrid.integrate(reference, reference, mask) ** 0.5
-                print(
-                    "%10.2e : %10.2e   |   %12.4e  %12.4e"
-                    % (rho_low, rho_high, error, worst)
-                )
+                print("%10.2e : %10.2e   |   %12.4e  %12.4e" % (rho_low, rho_high, error, worst))
             print()
     assert error < 6e-2
 
@@ -102,9 +97,7 @@ def test_solve_poisson_becke_n2():
         for lmax in range(0, lmaxmax + 1):
             result = linegrid.zeros()
             for i in range(mol.natom):
-                linegrid.eval_decomposition(
-                    hds[i][: (lmax + 1) ** 2], mol.coordinates[i], result
-                )
+                linegrid.eval_decomposition(hds[i][: (lmax + 1) ** 2], mol.coordinates[i], result)
             pt.clf()
             # pt.plot(linegrid.x, reference)
             # pt.plot(linegrid.x, result)
@@ -118,21 +111,13 @@ def test_solve_poisson_becke_sa():
     rtf = ExpRTransform(1e-4, 1e2, 500)
     r = rtf.get_radii()
     rhoy = np.exp(-0.5 * (r / sigma) ** 2) / sigma**3 / (2 * np.pi) ** 1.5
-    rhod = (
-        np.exp(-0.5 * (r / sigma) ** 2)
-        / sigma**3
-        / (2 * np.pi) ** 1.5
-        * (-r / sigma)
-        / sigma
-    )
+    rhod = np.exp(-0.5 * (r / sigma) ** 2) / sigma**3 / (2 * np.pi) ** 1.5 * (-r / sigma) / sigma
     rho = CubicSpline(rhoy, rhod, rtf)
     v = solve_poisson_becke([rho])[0]
 
     s2s = np.sqrt(2) * sigma
     soly = erf(r / s2s) / r
-    sold = (
-        np.exp(-((r / s2s) ** 2)) * 2 / np.sqrt(np.pi) / s2s / r - erf(r / s2s) / r**2
-    )
+    sold = np.exp(-((r / s2s) ** 2)) * 2 / np.sqrt(np.pi) / s2s / r - erf(r / s2s) / r**2
 
     if False:
         import matplotlib.pyplot as pt
@@ -160,13 +145,7 @@ def test_solve_poisson_becke_gaussian_dipole():
     # rho(\mathbf{r})=Y_1^0(\Omega) rhoy, with rhoy as given below
     # Note that rhoy is simply the derivative of a Gaussian charge distribution
     # with respect to r.
-    rhoy = (
-        -r
-        / sigma**2
-        * np.exp(-0.5 * (r / sigma) ** 2)
-        / sigma**3
-        / (2 * np.pi) ** 1.5
-    )
+    rhoy = -r / sigma**2 * np.exp(-0.5 * (r / sigma) ** 2) / sigma**3 / (2 * np.pi) ** 1.5
     rhod = (
         (-1.0 + r**2 / sigma**2)
         / sigma**2
@@ -180,9 +159,7 @@ def test_solve_poisson_becke_gaussian_dipole():
     s2s = np.sqrt(2) * sigma
     # The potential corresponding to Y_1^0(\Omega), can be found by deriving
     # the potential of a Gaussian charge distribution with respect to r
-    soly = (
-        np.exp(-((r / s2s) ** 2)) * 2 / np.sqrt(np.pi) / s2s / r - erf(r / s2s) / r**2
-    )
+    soly = np.exp(-((r / s2s) ** 2)) * 2 / np.sqrt(np.pi) / s2s / r - erf(r / s2s) / r**2
     sold = (
         2.0 * erf(r / s2s) / r**3
         - 2 * 2 / np.sqrt(np.pi) * np.exp(-((r / s2s) ** 2)) / s2s / r**2

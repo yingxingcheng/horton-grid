@@ -87,9 +87,7 @@ class BeckeMolGrid(IntGrid):
                that the computation of the molecular integration weights
                (based on the Becke partitioning) is skipped.
         """
-        natom, centers, numbers, pseudo_numbers = typecheck_geo(
-            centers, numbers, pseudo_numbers
-        )
+        natom, centers, numbers, pseudo_numbers = typecheck_geo(centers, numbers, pseudo_numbers)
         self._centers = centers
         self._numbers = numbers
         self._pseudo_numbers = pseudo_numbers
@@ -109,10 +107,7 @@ class BeckeMolGrid(IntGrid):
         self._mode = mode
 
         # allocate memory for the grid
-        size = sum(
-            agspec.get_size(self.numbers[i], self.pseudo_numbers[i])
-            for i in range(natom)
-        )
+        size = sum(agspec.get_size(self.numbers[i], self.pseudo_numbers[i]) for i in range(natom))
         points = np.zeros((size, 3), float)
         weights = np.zeros(size, float)
         self._becke_weights = np.ones(size, float)
@@ -128,9 +123,7 @@ class BeckeMolGrid(IntGrid):
             # More recent covalent radii are used than in the original work of Becke.
             # No covalent radius is defined for elements heavier than Curium and a
             # default value of 3.0 Bohr is used for heavier elements.
-            cov_radii = np.array(
-                [(periodic[n].cov_radius or 3.0) for n in self.numbers]
-            )
+            cov_radii = np.array([(periodic[n].cov_radius or 3.0) for n in self.numbers])
 
         # The actual work:
         if log.do_medium:

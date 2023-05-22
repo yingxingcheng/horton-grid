@@ -70,9 +70,7 @@ def _read_cube_header(f):
     pseudo_numbers = np.zeros(natom, float)
     coordinates = np.zeros((natom, 3), float)
     for i in range(natom):
-        numbers[i], pseudo_numbers[i], coordinates[i] = read_coordinate_line(
-            f.readline()
-        )
+        numbers[i], pseudo_numbers[i], coordinates[i] = read_coordinate_line(f.readline())
         # If the pseudo_number field is zero, we assume that no effective core
         # potentials were used.
         if pseudo_numbers[i] == 0.0:
@@ -163,7 +161,5 @@ def dump_cube(filename, data):
         if not isinstance(data.grid, UniformGrid):
             raise ValueError("The system grid must be a UniformGrid instance.")
         title = getattr(data, "title", "Created with HORTON")
-        _write_cube_header(
-            f, title, data.coordinates, data.numbers, data.grid, data.pseudo_numbers
-        )
+        _write_cube_header(f, title, data.coordinates, data.numbers, data.grid, data.pseudo_numbers)
         _write_cube_data(f, data.cube_data)

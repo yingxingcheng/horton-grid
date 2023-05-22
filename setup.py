@@ -21,14 +21,14 @@
 # --
 
 
+import numpy as np
 from distutils.command.install_data import install_data
 from distutils.command.install_headers import install_headers
-from setuptools import setup, Extension
+from setuptools import setup, Extension, find_packages
 from glob import glob
 import os
 import platform
 
-import numpy as np
 from Cython.Build import cythonize
 
 
@@ -40,9 +40,7 @@ def get_sources(dirname):
     """Get all cpp files and the cext.pyx file of a package"""
     # avoid accidental inclusion of in-place build files and inc files
     result = [
-        fn
-        for fn in glob("%s/*.cpp" % dirname)
-        if not (("ext.cpp" in fn) or ("_inc.cpp" in fn))
+        fn for fn in glob("%s/*.cpp" % dirname) if not (("ext.cpp" in fn) or ("_inc.cpp" in fn))
     ]
     result.append("%s/cext.pyx" % dirname)
     return result
@@ -149,62 +147,58 @@ ext_modules = [
 for e in ext_modules:
     e.cython_directives = {"embedsignature": True}
 
-# Call distutils setup
-# --------------------
+if __name__ == "__main__":
+    # Call distutils setup
+    # --------------------
 
-setup(
-    name="horton-grid",
-    version="2.3.0",
-    description="HORTON: Helpful Open-source Research TOol for N-fermion systems.",
-    author="Toon Verstraelen",
-    author_email="Toon.Verstraelen@UGent.be",
-    url="http://yingxingcheng.github.com/horton-grid/",
-    scripts=glob("scripts/*.py"),
-    package_dir={"horton_grid": "horton_grid"},
-    packages=[
-        "horton_grid",
-        "horton_grid.test",
-        "horton_grid.grid",
-        "horton_grid.grid.test",
-        "horton_grid.io",
-        "horton_grid.io.test",
-    ],
-    cmdclass={
-        "install_data": my_install_data,
-        "install_headers": my_install_headers,
-    },
-    data_files=[
-        ("share/horton_grid", glob("data/*.*")),
-        ("share/horton_grid/test", glob("data/test/*.*")),
-        ("share/horton_grid/basis", glob("data/basis/*.*")),
-        ("share/horton_grid/grids", glob("data/grids/*.txt")),
-    ]
-    + [
-        (
-            "share/horton_grid/examples/%s" % os.path.basename(dn[:-1]),
-            glob("%s/*.py" % dn) + glob("%s/README" % dn),
-        )
-        for dn in glob("data/examples/*/")
-    ]
-    + [
-        ("include/horton_grid", glob("horton_grid/*.h")),
-        ("include/horton_grid/grid", glob("horton_grid/grid/*.h")),
-    ],
-    package_data={
-        "horton_grid": ["*.pxd"],
-        "horton_grid.grid": ["*.pxd"],
-    },
-    ext_modules=cythonize(ext_modules),
-    headers=get_headers(),
-    classifiers=[
-        "Development Status :: 3 - Alpha",
-        "Environment :: Console",
-        "Intended Audience :: Science/Research",
-        "License :: OSI Approved :: GNU General Public License (GPL)",
-        "Operating System :: POSIX :: Linux",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Cython",
-        "Programming Language :: C++",
-        "Topic :: Science/Engineering :: Molecular Science",
-    ],
-)
+    setup(
+        name="horton-grid",
+        version="2.3.0",
+        description="HORTON: Helpful Open-source Research TOol for N-fermion systems.",
+        author="Toon Verstraelen",
+        author_email="Toon.Verstraelen@UGent.be",
+        url="http://yingxingcheng.github.com/horton-grid/",
+        package_dir={"horton_grid": "horton_grid"},
+        packages=find_packages(),
+        cmdclass={
+            "install_data": my_install_data,
+            "install_headers": my_install_headers,
+        },
+        data_files=[
+            ("share/horton_grid", glob("data/*.*")),
+            ("share/horton_grid/test", glob("data/test/*.*")),
+            ("share/horton_grid/basis", glob("data/basis/*.*")),
+            ("share/horton_grid/grids", glob("data/grids/*.txt")),
+        ]
+        + [
+            (
+                "share/horton_grid/examples/{}".format(os.path.basename(dn[:-1])),
+                glob(f"{dn}/*.py") + glob(f"{dn}/README"),
+            )
+            for dn in glob("data/examples/*/")
+        ]
+        + [
+            ("include/horton_grid", glob("horton_grid/*.h")),
+            ("include/horton_grid/grid", glob("horton_grid/grid/*.h")),
+        ],
+        package_data={
+            "horton_grid": ["*.pxd"],
+            "horton_grid.grid": ["*.pxd"],
+        },
+        ext_modules=cythonize(ext_modules),
+        headers=get_headers(),
+        classifiers=[
+            "Development Status :: 3 - Alpha",
+            "Environment :: Console",
+            "Intended Audience :: Science/Research",
+            "License :: OSI Approved :: GNU General Public License (GPL)",
+            "Operating System :: POSIX :: Linux",
+            "Programming Language :: Python :: 3",
+            "Programming Language :: Cython",
+            "Programming Language :: C++",
+            "Topic :: Science/Engineering :: Molecular Science",
+        ],
+        install_requires=[
+            "numpy",
+        ],
+    )
