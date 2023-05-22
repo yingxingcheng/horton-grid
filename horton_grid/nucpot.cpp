@@ -1,14 +1,14 @@
-// HORTON: Helpful Open-source Research TOol for N-fermion systems.
-// Copyright (C) 2011-2022 The HORTON Development Team
+// HORTON-GRID: GRID for Helpful Open-source Research TOol for N-fermion systems.
+// Copyright (C) 2011-2023 The HORTON-GRID Development Team
 //
-// This file is part of HORTON.
+// This file is part of HORTON-GRID
 //
-// HORTON is free software; you can redistribute it and/or
+// HORTON-GRID is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 3
 // of the License, or (at your option) any later version.
 //
-// HORTON is distributed in the hope that it will be useful,
+// HORTON-GRID is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
