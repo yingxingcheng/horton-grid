@@ -29,7 +29,7 @@ def test_becke_sum2_one():
     npoint = 100
     points = np.random.uniform(-5, 5, (npoint, 3))
     weights = np.random.uniform(0, 1, npoint)
-    grid = IntGrid(points, weights)
+    IntGrid(points, weights)
 
     weights0 = np.ones(npoint, float)
     weights1 = np.ones(npoint, float)
@@ -39,14 +39,14 @@ def test_becke_sum2_one():
     becke_helper_atom(points, weights0, radii, centers, 0, 3)
     becke_helper_atom(points, weights1, radii, centers, 1, 3)
 
-    assert abs(weights0+weights1 - 1).max() < 1e-10
+    assert abs(weights0 + weights1 - 1).max() < 1e-10
 
 
 def test_becke_sum3_one():
     npoint = 100
     points = np.random.uniform(-5, 5, (npoint, 3))
     weights = np.random.uniform(0, 1, npoint)
-    grid = IntGrid(points, weights)
+    IntGrid(points, weights)
 
     weights0 = np.ones(npoint, float)
     weights1 = np.ones(npoint, float)
@@ -58,7 +58,7 @@ def test_becke_sum3_one():
     becke_helper_atom(points, weights1, radii, centers, 1, 3)
     becke_helper_atom(points, weights2, radii, centers, 2, 3)
 
-    assert abs(weights0+weights1+weights2 - 1).max() < 1e-10
+    assert abs(weights0 + weights1 + weights2 - 1).max() < 1e-10
 
 
 def test_becke_special_points():

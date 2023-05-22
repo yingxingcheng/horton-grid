@@ -28,10 +28,11 @@ from horton_grid import context
 
 from horton_grid.test.common import in_horton_source_root
 
+
 def test_context():
-    fn = context.get_fn('basis/sto-3g.nwchem')
+    fn = context.get_fn("basis/sto-3g.nwchem")
     assert os.path.isfile(fn)
-    fns = context.glob('basis/*.nwchem')
+    fns = context.glob("basis/*.nwchem")
     assert fn in fns
 
 
@@ -39,13 +40,18 @@ def test_data_files():
     # Find files in data that were not checked in.
     # This test only makes sense if ran inside the source tree. The purpose is
     # to detect mistakes in the development process.
-    if context.data_dir == os.path.abspath('data/') and os.path.isdir('.git'):
-        lines = subprocess.check_output(['git', 'ls-files', '--others', '--exclude-standard', 'data'])\
-            .decode("utf-8").split('\n')
+    if context.data_dir == os.path.abspath("data/") and os.path.isdir(".git"):
+        lines = (
+            subprocess.check_output(
+                ["git", "ls-files", "--others", "--exclude-standard", "data"]
+            )
+            .decode("utf-8")
+            .split("\n")
+        )
         for line in lines:
             line = line.strip()
             if len(line) != 0:
-                raise ValueError('The following file is not checked in: %s' % line)
+                raise ValueError("The following file is not checked in: %s" % line)
 
 
 def test_shebang():
@@ -54,7 +60,7 @@ def test_shebang():
     def iter_py_files(root):
         for dn, subdns, fns in os.walk(root):
             for fn in fns:
-                if fn.endswith('.py'):
+                if fn.endswith(".py"):
                     yield os.path.join(dn, fn)
 
     # Collect all bad files
@@ -64,22 +70,22 @@ def test_shebang():
     for fn_py in iter_py_files(context.data_dir):
         if os.access(fn_py, os.X_OK):
             with open(fn_py) as f:
-                if next(f) != '#!/usr/bin/env python\n':
+                if next(f) != "#!/usr/bin/env python\n":
                     bad.append(fn_py)
 
     # Loop over all py files in scripts, if testing from the development root:
     if in_horton_source_root():
-        for fn_py in iter_py_files('scripts'):
-            assert os.access(fn_py, os.X_OK), 'Py Files in scripts/ must be executable.'
+        for fn_py in iter_py_files("scripts"):
+            assert os.access(fn_py, os.X_OK), "Py Files in scripts/ must be executable."
             with open(fn_py) as f:
-                if next(f) != '#!/usr/bin/env python\n':
+                if next(f) != "#!/usr/bin/env python\n":
                     bad.append(fn_py)
 
     if len(bad) > 0:
-        print('The following files have an incorrect shebang line:')
+        print("The following files have an incorrect shebang line:")
         for fn in bad:
-            print('   ', fn)
-        raise AssertionError('Some Python scripts have an incorrect shebang line.')
+            print("   ", fn)
+        raise AssertionError("Some Python scripts have an incorrect shebang line.")
 
 
 def test_do_not_use_iodata():
@@ -87,23 +93,23 @@ def test_do_not_use_iodata():
     # or horton.part.proatomdb.
 
     # find packages
-    packages = {'horton': []}
-    for fn in glob('horton/*/__init__.py'):
-        subpackage = fn.split('/')[1]
-        if subpackage in ['test', 'io', 'scripts']:
+    packages = {"horton": []}
+    for fn in glob("horton/*/__init__.py"):
+        subpackage = fn.split("/")[1]
+        if subpackage in ["test", "io", "scripts"]:
             continue
-        packages['horton.%s' % subpackage] = []
+        packages["horton.%s" % subpackage] = []
     # find modules
     for package, modules in packages.items():
-        stub = package.replace('.', '/')
-        for fn in sorted(glob('%s/*.py' % stub) + glob('%s/*.so' % stub)):
-            module = fn.split('/')[-1][:-3]
-            if module in ['__init__', 'proatomdb']:
+        stub = package.replace(".", "/")
+        for fn in sorted(glob("%s/*.py" % stub) + glob("%s/*.so" % stub)):
+            module = fn.split("/")[-1][:-3]
+            if module in ["__init__", "proatomdb"]:
                 continue
             modules.append(module)
     # try to import IOData
     for package, modules in packages.items():
         for module in modules:
-            m = importlib.import_module('%s.%s' % (package, module))
+            m = importlib.import_module("%s.%s" % (package, module))
             with assert_raises(AttributeError):
                 m.IOData

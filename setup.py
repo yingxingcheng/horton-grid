@@ -21,16 +21,12 @@
 # --
 
 
-import configparser
 from distutils.command.install_data import install_data
 from distutils.command.install_headers import install_headers
 from setuptools import setup, Extension
 from glob import glob
-import json
 import os
 import platform
-import subprocess
-import sys
 
 import numpy as np
 from Cython.Build import cythonize
@@ -44,7 +40,9 @@ def get_sources(dirname):
     """Get all cpp files and the cext.pyx file of a package"""
     # avoid accidental inclusion of in-place build files and inc files
     result = [
-        fn for fn in glob("%s/*.cpp" % dirname) if not (("ext.cpp" in fn) or ("_inc.cpp" in fn))
+        fn
+        for fn in glob("%s/*.cpp" % dirname)
+        if not (("ext.cpp" in fn) or ("_inc.cpp" in fn))
     ]
     result.append("%s/cext.pyx" % dirname)
     return result
@@ -155,7 +153,7 @@ for e in ext_modules:
 # --------------------
 
 setup(
-    name="horton_grid",
+    name="horton-grid",
     version="2.3.0",
     description="HORTON: Helpful Open-source Research TOol for N-fermion systems.",
     author="Toon Verstraelen",

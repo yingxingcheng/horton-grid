@@ -24,10 +24,11 @@ from horton_grid import *  # pylint: disable=wildcard-import,unused-wildcard-imp
 
 
 def test_recursive_timer():
-    @timer.with_section('Foo')
+    @timer.with_section("Foo")
     def factorial(n):
         if n <= 1:
             return 1
         else:
-            return factorial(n-1)*n
+            return factorial(n - 1) * n
+
     assert factorial(4) == 24

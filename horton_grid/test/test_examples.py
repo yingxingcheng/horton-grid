@@ -45,19 +45,24 @@ def test_example_getting_started_first():
 def test_example_hamiltonian_hydrogen_ring():
     required = [context.get_fn("examples/hamiltonian/hydrogen_ring.py")]
     expected = ["ring.xyz"]
-    check_script_in_tmp("horton-regression-test.py ./hydrogen_ring.py", required, expected)
+    check_script_in_tmp(
+        "horton-regression-test.py ./hydrogen_ring.py", required, expected
+    )
 
 
 @attr("rt")
 def test_example_hamiltonian_even_tempered_li():
     check_script(
-        "horton-regression-test.py ./even_tempered_li.py", context.get_fn("examples/hamiltonian")
+        "horton-regression-test.py ./even_tempered_li.py",
+        context.get_fn("examples/hamiltonian"),
     )
 
 
 @attr("rt")
 def test_example_hamiltonian_hubbard():
-    check_script("horton-regression-test.py ./hubbard.py", context.get_fn("examples/hamiltonian"))
+    check_script(
+        "horton-regression-test.py ./hubbard.py", context.get_fn("examples/hamiltonian")
+    )
 
 
 @attr("rt")
@@ -101,14 +106,18 @@ def test_example_hamiltonian_dump_internal_ao_fcidump():
 
 @attr("rt")
 def test_example_grid_expectation_r():
-    check_script("horton-regression-test.py ./expectation_r.py", context.get_fn("examples/grid"))
+    check_script(
+        "horton-regression-test.py ./expectation_r.py", context.get_fn("examples/grid")
+    )
 
 
 @attr("rt")
 def test_example_hf_dft_rhf_h2_cholesky():
     required = [context.get_fn("examples/hf_dft/rhf_h2_cholesky.py")]
     expected = ["h2-scf.molden", "h2-scf.h5", "h2-hamiltonian.h5"]
-    check_script_in_tmp("horton-regression-test.py ./rhf_h2_cholesky.py", required, expected)
+    check_script_in_tmp(
+        "horton-regression-test.py ./rhf_h2_cholesky.py", required, expected
+    )
 
 
 @attr("rt")
@@ -122,133 +131,176 @@ def test_example_hf_dft_rhf_n2_dense():
         "n2.FCIDUMP",
         "n2-hamiltonian.h5",
     ]
-    check_script_in_tmp("horton-regression-test.py ./rhf_n2_dense.py", required, expected)
+    check_script_in_tmp(
+        "horton-regression-test.py ./rhf_n2_dense.py", required, expected
+    )
 
 
 @attr("rt")
 def test_example_hf_dft_rhf_water_cholesky():
     required = [context.get_fn("examples/hf_dft/rhf_water_cholesky.py")]
     expected = ["water.h5", "water.molden"]
-    check_script_in_tmp("horton-regression-test.py ./rhf_water_cholesky.py", required, expected)
+    check_script_in_tmp(
+        "horton-regression-test.py ./rhf_water_cholesky.py", required, expected
+    )
 
 
 @attr("rt")
 def test_example_hf_dft_rhf_water_dense():
     required = [context.get_fn("examples/hf_dft/rhf_water_dense.py")]
-    expected = ["water-scf.h5", "water-scf.molden", "water.FCIDUMP", "water-hamiltonian.h5"]
-    check_script_in_tmp("horton-regression-test.py ./rhf_water_dense.py", required, expected)
+    expected = [
+        "water-scf.h5",
+        "water-scf.molden",
+        "water.FCIDUMP",
+        "water-hamiltonian.h5",
+    ]
+    check_script_in_tmp(
+        "horton-regression-test.py ./rhf_water_dense.py", required, expected
+    )
 
 
 @attr("rt")
 def test_example_hf_dft_rks_water_gga():
     required = [context.get_fn("examples/hf_dft/rks_water_gga.py")]
     expected = ["water.h5"]
-    check_script_in_tmp("horton-regression-test.py ./rks_water_gga.py", required, expected)
+    check_script_in_tmp(
+        "horton-regression-test.py ./rks_water_gga.py", required, expected
+    )
 
 
 @attr("rt")
 def test_example_hf_dft_rks_water_hybgga():
     required = [context.get_fn("examples/hf_dft/rks_water_hybgga.py")]
     expected = ["water.h5"]
-    check_script_in_tmp("horton-regression-test.py ./rks_water_hybgga.py", required, expected)
+    check_script_in_tmp(
+        "horton-regression-test.py ./rks_water_hybgga.py", required, expected
+    )
 
 
 @attr("rt")
 def test_example_hf_dft_rks_water_hybmgga():
     required = [context.get_fn("examples/hf_dft/rks_water_hybmgga.py")]
     expected = ["water.h5"]
-    check_script_in_tmp("horton-regression-test.py ./rks_water_hybmgga.py", required, expected)
+    check_script_in_tmp(
+        "horton-regression-test.py ./rks_water_hybmgga.py", required, expected
+    )
 
 
 @attr("rt")
 def test_example_hf_dft_rks_water_lda():
     required = [context.get_fn("examples/hf_dft/rks_water_lda.py")]
     expected = ["water.h5"]
-    check_script_in_tmp("horton-regression-test.py ./rks_water_lda.py", required, expected)
+    check_script_in_tmp(
+        "horton-regression-test.py ./rks_water_lda.py", required, expected
+    )
 
 
 @attr("rt")
 def test_example_hf_dft_rks_water_mgga():
     required = [context.get_fn("examples/hf_dft/rks_water_mgga.py")]
     expected = ["water.h5"]
-    check_script_in_tmp("horton-regression-test.py ./rks_water_mgga.py", required, expected)
+    check_script_in_tmp(
+        "horton-regression-test.py ./rks_water_mgga.py", required, expected
+    )
 
 
 @attr("rt")
 def test_example_hf_dft_rks_water_numgga():
     required = [context.get_fn("examples/hf_dft/rks_water_numgga.py")]
     expected = ["water.h5"]
-    check_script_in_tmp("horton-regression-test.py ./rks_water_numgga.py", required, expected)
+    check_script_in_tmp(
+        "horton-regression-test.py ./rks_water_numgga.py", required, expected
+    )
 
 
 @attr("rt")
 def test_example_hf_dft_rks_water_numlda():
     required = [context.get_fn("examples/hf_dft/rks_water_numlda.py")]
     expected = ["water.h5"]
-    check_script_in_tmp("horton-regression-test.py ./rks_water_numlda.py", required, expected)
+    check_script_in_tmp(
+        "horton-regression-test.py ./rks_water_numlda.py", required, expected
+    )
 
 
 @attr("rt")
 def test_example_hf_dft_uhf_methyl_cholesky():
     required = [context.get_fn("examples/hf_dft/uhf_methyl_cholesky.py")]
     expected = ["methyl.h5", "methyl.molden"]
-    check_script_in_tmp("horton-regression-test.py ./uhf_methyl_cholesky.py", required, expected)
+    check_script_in_tmp(
+        "horton-regression-test.py ./uhf_methyl_cholesky.py", required, expected
+    )
 
 
 @attr("rt")
 def test_example_hf_dft_uhf_methyl_dense():
     required = [context.get_fn("examples/hf_dft/uhf_methyl_dense.py")]
     expected = ["methyl.h5", "methyl.molden"]
-    check_script_in_tmp("horton-regression-test.py ./uhf_methyl_dense.py", required, expected)
+    check_script_in_tmp(
+        "horton-regression-test.py ./uhf_methyl_dense.py", required, expected
+    )
 
 
 @attr("rt")
 def test_example_hf_dft_uks_methyl_gga():
     required = [context.get_fn("examples/hf_dft/uks_methyl_gga.py")]
     expected = ["methyl.h5"]
-    check_script_in_tmp("horton-regression-test.py ./uks_methyl_gga.py", required, expected)
+    check_script_in_tmp(
+        "horton-regression-test.py ./uks_methyl_gga.py", required, expected
+    )
 
 
 @attr("rt")
 def test_example_hf_dft_uks_methyl_hybgga():
     required = [context.get_fn("examples/hf_dft/uks_methyl_hybgga.py")]
     expected = ["methyl.h5"]
-    check_script_in_tmp("horton-regression-test.py ./uks_methyl_hybgga.py", required, expected)
+    check_script_in_tmp(
+        "horton-regression-test.py ./uks_methyl_hybgga.py", required, expected
+    )
 
 
 @attr("rt")
 def test_example_hf_dft_uks_methyl_hybmgga():
     required = [context.get_fn("examples/hf_dft/uks_methyl_hybmgga.py")]
     expected = ["methyl.h5"]
-    check_script_in_tmp("horton-regression-test.py ./uks_methyl_hybmgga.py", required, expected)
+    check_script_in_tmp(
+        "horton-regression-test.py ./uks_methyl_hybmgga.py", required, expected
+    )
 
 
 @attr("rt")
 def test_example_hf_dft_uks_methyl_lda():
     required = [context.get_fn("examples/hf_dft/uks_methyl_lda.py")]
     expected = ["methyl.h5"]
-    check_script_in_tmp("horton-regression-test.py ./uks_methyl_lda.py", required, expected)
+    check_script_in_tmp(
+        "horton-regression-test.py ./uks_methyl_lda.py", required, expected
+    )
 
 
 @attr("rt")
 def test_example_hf_dft_uks_methyl_mgga():
     required = [context.get_fn("examples/hf_dft/uks_methyl_mgga.py")]
     expected = ["methyl.h5"]
-    check_script_in_tmp("horton-regression-test.py ./uks_methyl_mgga.py", required, expected)
+    check_script_in_tmp(
+        "horton-regression-test.py ./uks_methyl_mgga.py", required, expected
+    )
 
 
 @attr("rt")
 def test_example_hf_dft_uks_methyl_numgga():
     required = [context.get_fn("examples/hf_dft/uks_methyl_numgga.py")]
     expected = ["methyl.h5"]
-    check_script_in_tmp("horton-regression-test.py ./uks_methyl_numgga.py", required, expected)
+    check_script_in_tmp(
+        "horton-regression-test.py ./uks_methyl_numgga.py", required, expected
+    )
 
 
 @attr("rt")
 def test_example_hf_dft_uks_methyl_numlda():
     required = [context.get_fn("examples/hf_dft/uks_methyl_numlda.py")]
     expected = ["methyl.h5"]
-    check_script_in_tmp("horton-regression-test.py ./uks_methyl_numlda.py", required, expected)
+    check_script_in_tmp(
+        "horton-regression-test.py ./uks_methyl_numlda.py", required, expected
+    )
 
 
 @attr("rt")

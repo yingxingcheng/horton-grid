@@ -25,14 +25,14 @@ import numpy as np
 from horton.grid.cext import LinearRTransform, CubicSpline
 
 
-__all__ = ['get_cosine_spline', 'get_exp_spline']
+__all__ = ["get_cosine_spline", "get_exp_spline"]
 
 
 def get_cosine_spline():
     # Construct a simple spline for the function cos(x)+1 in the range 0,pi
     rtf = LinearRTransform(0.0, np.pi, 100)
     x = rtf.get_radii()
-    y = np.cos(x)+1
+    y = np.cos(x) + 1
     d = -np.sin(x)
     return CubicSpline(y, d, rtf)
 
@@ -40,6 +40,6 @@ def get_cosine_spline():
 def get_exp_spline():
     rtf = LinearRTransform(0.0, 20.0, 100)
     x = rtf.get_radii()
-    y = np.exp(-0.2*x)
-    d = -0.2*np.exp(-0.2*x)
+    y = np.exp(-0.2 * x)
+    d = -0.2 * np.exp(-0.2 * x)
     return CubicSpline(y, d, rtf)

@@ -27,46 +27,70 @@ from horton import *  # pylint: disable=wildcard-import,unused-wildcard-import
 
 
 def _merge(y, d):
-    '''Put y and d in one vector'''
+    """Put y and d in one vector"""
     return np.array([y, d]).T.ravel()
 
 
 def test_hermite_overlap2():
     # things that should be zero (no overlap)
-    assert hermite_overlap2(10, 2*5+0, False, 2*2+0, False) == 0
-    assert hermite_overlap2(10, 2*2+0, False, 2*5+0, False) == 0
+    assert hermite_overlap2(10, 2 * 5 + 0, False, 2 * 2 + 0, False) == 0
+    assert hermite_overlap2(10, 2 * 2 + 0, False, 2 * 5 + 0, False) == 0
     # things that should be zero (uneven integrand)
-    assert hermite_overlap2(10, 2*5+0, False, 2*5+1, False) == 0
-    assert hermite_overlap2(10, 2*5+1, False, 2*5+0, False) == 0
-    assert hermite_overlap2(10, 2*5+0, False, 2*5+0, True ) == 0
-    assert hermite_overlap2(10, 2*5+0, True, 2*5+0, False) == 0
+    assert hermite_overlap2(10, 2 * 5 + 0, False, 2 * 5 + 1, False) == 0
+    assert hermite_overlap2(10, 2 * 5 + 1, False, 2 * 5 + 0, False) == 0
+    assert hermite_overlap2(10, 2 * 5 + 0, False, 2 * 5 + 0, True) == 0
+    assert hermite_overlap2(10, 2 * 5 + 0, True, 2 * 5 + 0, False) == 0
     # things that should be non-zero
-    assert hermite_overlap2(10, 2*5+0, False, 2*5+0, False) != 0
-    assert hermite_overlap2(10, 2*5+0, True, 2*5+0, True ) != 0
-    assert hermite_overlap2(10, 2*5+1, False, 2*5+1, False) != 0
-    assert hermite_overlap2(10, 2*5+1, True, 2*5+1, True ) != 0
+    assert hermite_overlap2(10, 2 * 5 + 0, False, 2 * 5 + 0, False) != 0
+    assert hermite_overlap2(10, 2 * 5 + 0, True, 2 * 5 + 0, True) != 0
+    assert hermite_overlap2(10, 2 * 5 + 1, False, 2 * 5 + 1, False) != 0
+    assert hermite_overlap2(10, 2 * 5 + 1, True, 2 * 5 + 1, True) != 0
     # symmetry
-    assert hermite_overlap2(10, 2*5+0, False, 2*6+0, False) == hermite_overlap2(10, 2*6+0, False, 2*5+0, False)
-    assert hermite_overlap2(10, 2*5+0, True, 2*6+0, True ) == hermite_overlap2(10, 2*6+0, True, 2*5+0, True )
+    assert hermite_overlap2(10, 2 * 5 + 0, False, 2 * 6 + 0, False) == hermite_overlap2(
+        10, 2 * 6 + 0, False, 2 * 5 + 0, False
+    )
+    assert hermite_overlap2(10, 2 * 5 + 0, True, 2 * 6 + 0, True) == hermite_overlap2(
+        10, 2 * 6 + 0, True, 2 * 5 + 0, True
+    )
     # anti-symmetry
-    assert hermite_overlap2(10, 2*5+0, False, 2*6+1, False) == -hermite_overlap2(10, 2*6+0, False, 2*5+1, False)
-    assert hermite_overlap2(10, 2*5+0, True, 2*6+1, True ) == -hermite_overlap2(10, 2*6+0, True, 2*5+1, True )
+    assert hermite_overlap2(
+        10, 2 * 5 + 0, False, 2 * 6 + 1, False
+    ) == -hermite_overlap2(10, 2 * 6 + 0, False, 2 * 5 + 1, False)
+    assert hermite_overlap2(10, 2 * 5 + 0, True, 2 * 6 + 1, True) == -hermite_overlap2(
+        10, 2 * 6 + 0, True, 2 * 5 + 1, True
+    )
     # xmax
-    assert 2*hermite_overlap2(8, 2*0+0, False, 2*0+0, False) == hermite_overlap2(8, 2*4+0, False, 2*4+0, False)
-    assert 2*hermite_overlap2(8, 2*8+0, False, 2*8+0, False) == hermite_overlap2(8, 2*4+0, False, 2*4+0, False)
+    assert 2 * hermite_overlap2(
+        8, 2 * 0 + 0, False, 2 * 0 + 0, False
+    ) == hermite_overlap2(8, 2 * 4 + 0, False, 2 * 4 + 0, False)
+    assert 2 * hermite_overlap2(
+        8, 2 * 8 + 0, False, 2 * 8 + 0, False
+    ) == hermite_overlap2(8, 2 * 4 + 0, False, 2 * 4 + 0, False)
 
 
 def test_hermite_overlap3():
     # things that should be zero
-    assert hermite_overlap3(10, 2*5+0, False, 2*5+0, False, 2*7+0, False) == 0
-    assert hermite_overlap3(10, 2*5+0, False, 2*6+0, False, 2*7+0, False) == 0
+    assert (
+        hermite_overlap3(10, 2 * 5 + 0, False, 2 * 5 + 0, False, 2 * 7 + 0, False) == 0
+    )
+    assert (
+        hermite_overlap3(10, 2 * 5 + 0, False, 2 * 6 + 0, False, 2 * 7 + 0, False) == 0
+    )
     # things that should be zero (uneven integrand)
-    assert hermite_overlap3(10, 2*5+0, False, 2*5+0, False, 2*5+0, True ) == 0
-    assert hermite_overlap3(10, 2*5+0, False, 2*5+1, False, 2*5+0, False) == 0
+    assert (
+        hermite_overlap3(10, 2 * 5 + 0, False, 2 * 5 + 0, False, 2 * 5 + 0, True) == 0
+    )
+    assert (
+        hermite_overlap3(10, 2 * 5 + 0, False, 2 * 5 + 1, False, 2 * 5 + 0, False) == 0
+    )
     # things that should be non-zero (even integrand)
-    assert hermite_overlap3(10, 2*5+0, False, 2*5+0, False, 2*5+0, False) != 0
-    assert hermite_overlap3(10, 2*5+0, True, 2*5+0, False, 2*5+0, True ) != 0
-    assert hermite_overlap3(10, 2*5+1, False, 2*5+0, False, 2*5+1, False) != 0
+    assert (
+        hermite_overlap3(10, 2 * 5 + 0, False, 2 * 5 + 0, False, 2 * 5 + 0, False) != 0
+    )
+    assert hermite_overlap3(10, 2 * 5 + 0, True, 2 * 5 + 0, False, 2 * 5 + 0, True) != 0
+    assert (
+        hermite_overlap3(10, 2 * 5 + 1, False, 2 * 5 + 0, False, 2 * 5 + 1, False) != 0
+    )
 
 
 def test_hermite_node():
@@ -102,9 +126,9 @@ def test_hermite_node():
 
 
 def test_hermite_product2():
-    assert hermite_product2(0, 2*0+0, False, 2*0+0, False) == 1
-    assert hermite_product2(0, 2*1+0, False, 2*0+0, False) == 0
-    assert hermite_product2(0, 2*0+0, False, 2*0+1, False) == 0
+    assert hermite_product2(0, 2 * 0 + 0, False, 2 * 0 + 0, False) == 1
+    assert hermite_product2(0, 2 * 1 + 0, False, 2 * 0 + 0, False) == 0
+    assert hermite_product2(0, 2 * 0 + 0, False, 2 * 0 + 1, False) == 0
 
 
 def test_build_ode2_basics():
@@ -118,13 +142,13 @@ def test_build_ode2_basics():
     bcs = [None, None, np.random.normal(0, 1), np.random.normal(0, 1)]
     random.shuffle(bcs)
     coeffs, rhs = build_ode2(by, bd, ay, ad, fy, fd, bcs)
-    assert coeffs.shape == (2*npoint, 2*npoint)
+    assert coeffs.shape == (2 * npoint, 2 * npoint)
     for irow, icol in (0, 4), (0, 5), (0, 6), (0, 7), (2, 6), (2, 7):
         assert coeffs[irow, icol] == 0
-        assert coeffs[irow+1, icol] == 0
+        assert coeffs[irow + 1, icol] == 0
         assert coeffs[icol, irow] == 0
-        assert coeffs[icol, irow+1] == 0
-    assert rhs.shape == (2*npoint,)
+        assert coeffs[icol, irow + 1] == 0
+    assert rhs.shape == (2 * npoint,)
     assert abs(rhs).min() != 0
 
 
@@ -169,28 +193,28 @@ def test_long_quadratic():
     coeffs, rhs = build_ode2(by, bd, ay, ad, fy, fd, (0.0, None, 0.0, None))
     # case 1
     solution = np.linalg.solve(coeffs, rhs)
-    y = 0.5*(x**2 - 3.0*x)
+    y = 0.5 * (x**2 - 3.0 * x)
     d = x - 1.5
     assert abs(solution - _merge(y, d)).max() < 1e-12
     # case 2
     rhs[0] = 1.0
     rhs[-2] = 1.0
     solution = np.linalg.solve(coeffs, rhs)
-    y = 0.5*(x**2 - 3.0*x) + 1.0
+    y = 0.5 * (x**2 - 3.0 * x) + 1.0
     d = x - 1.5
     assert abs(solution - _merge(y, d)).max() < 1e-12
     # case 3
     rhs[0] = 0.0
     rhs[-2] = 4.5
     solution = np.linalg.solve(coeffs, rhs)
-    y = 0.5*x**2
+    y = 0.5 * x**2
     d = x
     assert abs(solution - _merge(y, d)).max() < 1e-12
     # case 4
     rhs[0] = 2.0
     rhs[-2] = 0.5
     solution = np.linalg.solve(coeffs, rhs)
-    y = 0.5*x**2 - 2*x + 2
+    y = 0.5 * x**2 - 2 * x + 2
     d = x - 2
     assert abs(solution - _merge(y, d)).max() < 1e-12
 
@@ -206,17 +230,17 @@ def test_simple_cubic():
     coeffs, rhs = build_ode2(by, bd, ay, ad, fy, fd, (0.0, None, 0.0, None))
     # case 1
     solution = np.linalg.solve(coeffs, rhs)
-    assert abs(solution - [0, -1.0/6.0, 0, 1.0/3.0]).max() < 1e-12
+    assert abs(solution - [0, -1.0 / 6.0, 0, 1.0 / 3.0]).max() < 1e-12
     # case 2
     rhs[0] = 1.0
     rhs[-2] = 1.0
     solution = np.linalg.solve(coeffs, rhs)
-    assert abs(solution - [1, -1.0/6.0, 1, 1.0/3.0]).max() < 1e-12
+    assert abs(solution - [1, -1.0 / 6.0, 1, 1.0 / 3.0]).max() < 1e-12
     # case 3
     rhs[0] = 0.0
-    rhs[-2] = 1.0/6.0
+    rhs[-2] = 1.0 / 6.0
     solution = np.linalg.solve(coeffs, rhs)
-    assert abs(solution - [0.0, 0.0, 1.0/6.0, 0.5]).max() < 1e-12
+    assert abs(solution - [0.0, 0.0, 1.0 / 6.0, 0.5]).max() < 1e-12
 
 
 def test_long_cubic():
@@ -231,29 +255,29 @@ def test_long_cubic():
     coeffs, rhs = build_ode2(by, bd, ay, ad, fy, fd, (0.0, None, 0.0, None))
     # case 1
     solution = np.linalg.solve(coeffs, rhs)
-    y = x**3/6.0 - 1.5*x
-    d = x**2/2.0 - 1.5
+    y = x**3 / 6.0 - 1.5 * x
+    d = x**2 / 2.0 - 1.5
     assert abs(solution - _merge(y, d)).max() < 1e-12
     # case 2
     rhs[0] = 1.0
     rhs[-2] = 1.0
     solution = np.linalg.solve(coeffs, rhs)
-    y = x**3/6.0 - 1.5*x + 1.0
-    d = x**2/2.0 - 1.5
+    y = x**3 / 6.0 - 1.5 * x + 1.0
+    d = x**2 / 2.0 - 1.5
     assert abs(solution - _merge(y, d)).max() < 1e-12
     # case 3
     rhs[0] = 0.0
     rhs[-2] = 4.5
     solution = np.linalg.solve(coeffs, rhs)
-    y = x**3/6.0
-    d = x**2/2.0
+    y = x**3 / 6.0
+    d = x**2 / 2.0
     assert abs(solution - _merge(y, d)).max() < 1e-12
     # case 4
     rhs[0] = 2.0
     rhs[-2] = 0.5
     solution = np.linalg.solve(coeffs, rhs)
-    y = x**3/6.0 - 2.0*x + 2.0
-    d = x**2/2.0 - 2.0
+    y = x**3 / 6.0 - 2.0 * x + 2.0
+    d = x**2 / 2.0 - 2.0
     assert abs(solution - _merge(y, d)).max() < 1e-12
 
 
@@ -261,25 +285,36 @@ def test_poisson_s_identity():
     npoint = 50
     x = np.arange(0, npoint, dtype=float)
     sigma = 15.0
-    rhoy = np.exp(-0.5*(x/sigma)**2)/sigma**3/(2*np.pi)**1.5
-    rhod = np.exp(-0.5*(x/sigma)**2)/sigma**3/(2*np.pi)**1.5*(-x/sigma)/sigma
+    rhoy = np.exp(-0.5 * (x / sigma) ** 2) / sigma**3 / (2 * np.pi) ** 1.5
+    rhod = (
+        np.exp(-0.5 * (x / sigma) ** 2)
+        / sigma**3
+        / (2 * np.pi) ** 1.5
+        * (-x / sigma)
+        / sigma
+    )
 
     # input for the solver
-    fy = -4*np.pi*x*rhoy
-    fd = -4*np.pi*(rhoy + x*rhod)
+    fy = -4 * np.pi * x * rhoy
+    fd = -4 * np.pi * (rhoy + x * rhod)
     by = np.zeros(npoint)
     bd = np.zeros(npoint)
     ay = np.zeros(npoint)
     ad = np.zeros(npoint)
-    #ay = -1.0/x**2
-    #ad = 2.0/x**3
+    # ay = -1.0/x**2
+    # ad = 2.0/x**3
 
     # get matrices
     coeffs, rhs = build_ode2(by, bd, ay, ad, fy, fd, (0.0, None, 1.0, None))
     solution = np.linalg.solve(coeffs, rhs)
 
-    soly = erf(x/(np.sqrt(2)*sigma))
-    sold = np.exp(-(x/(np.sqrt(2)*sigma))**2)*2/np.sqrt(np.pi)/(np.sqrt(2)*sigma)
+    soly = erf(x / (np.sqrt(2) * sigma))
+    sold = (
+        np.exp(-((x / (np.sqrt(2) * sigma)) ** 2))
+        * 2
+        / np.sqrt(np.pi)
+        / (np.sqrt(2) * sigma)
+    )
 
     assert abs(solution[::2] - soly).max() < 2e-3
     assert abs(solution[1::2] - sold).max() < 2e-3
@@ -290,31 +325,42 @@ def test_poisson_s_exp():
     rtf = ExpRTransform(1e-3, 1e1, npoint)
     x = rtf.get_radii()
     sigma = 1.0
-    rhoy = np.exp(-0.5*(x/sigma)**2)/sigma**3/(2*np.pi)**1.5
-    rhod = np.exp(-0.5*(x/sigma)**2)/sigma**3/(2*np.pi)**1.5*(-x/sigma)/sigma
+    rhoy = np.exp(-0.5 * (x / sigma) ** 2) / sigma**3 / (2 * np.pi) ** 1.5
+    rhod = (
+        np.exp(-0.5 * (x / sigma) ** 2)
+        / sigma**3
+        / (2 * np.pi) ** 1.5
+        * (-x / sigma)
+        / sigma
+    )
 
     # input for the solver
-    fy = -4*np.pi*x*rhoy
-    fd = -4*np.pi*(rhoy + x*rhod)
+    fy = -4 * np.pi * x * rhoy
+    fd = -4 * np.pi * (rhoy + x * rhod)
 
     # transform to linear coordinate
     j1 = rtf.get_deriv()
     j2 = rtf.get_deriv2()
     j3 = rtf.get_deriv3()
-    by1 = -j2/j1
-    bd1 = (j2*j2 - j1*j3)/(j1*j1)
+    by1 = -j2 / j1
+    bd1 = (j2 * j2 - j1 * j3) / (j1 * j1)
     ay1 = np.zeros(npoint)
     ad1 = np.zeros(npoint)
-    fy1 = fy*j1*j1
-    fd1 = (fd*j1*j1 + 2*j2*fy)*j1
+    fy1 = fy * j1 * j1
+    fd1 = (fd * j1 * j1 + 2 * j2 * fy) * j1
 
     # get matrices
     coeffs, rhs = build_ode2(by1, bd1, ay1, ad1, fy1, fd1, (0.0, None, 1.0, None))
     solution = np.linalg.solve(coeffs, rhs)
     solution[1::2] /= j1
 
-    soly = erf(x/(np.sqrt(2)*sigma))
-    sold = np.exp(-(x/(np.sqrt(2)*sigma))**2)*2/np.sqrt(np.pi)/(np.sqrt(2)*sigma)
+    soly = erf(x / (np.sqrt(2) * sigma))
+    sold = (
+        np.exp(-((x / (np.sqrt(2) * sigma)) ** 2))
+        * 2
+        / np.sqrt(np.pi)
+        / (np.sqrt(2) * sigma)
+    )
 
     assert abs(solution[::2] - soly).max() < 2e-3
     assert abs(solution[1::2] - sold).max() < 2e-3
@@ -327,20 +373,31 @@ def check_solve_s(rtf, sigma=1.0, epsy=1e-6, epsd=1e-3):
     b = CubicSpline(z, z, rtf)
     a = CubicSpline(z, z, rtf)
 
-    rhoy = np.exp(-0.5*(x/sigma)**2)/sigma**3/(2*np.pi)**1.5
-    rhod = np.exp(-0.5*(x/sigma)**2)/sigma**3/(2*np.pi)**1.5*(-x/sigma)/sigma
-    fy = -4*np.pi*x*rhoy
-    fd = -4*np.pi*(rhoy + x*rhod)
+    rhoy = np.exp(-0.5 * (x / sigma) ** 2) / sigma**3 / (2 * np.pi) ** 1.5
+    rhod = (
+        np.exp(-0.5 * (x / sigma) ** 2)
+        / sigma**3
+        / (2 * np.pi) ** 1.5
+        * (-x / sigma)
+        / sigma
+    )
+    fy = -4 * np.pi * x * rhoy
+    fd = -4 * np.pi * (rhoy + x * rhod)
     f = CubicSpline(fy, fd, rtf)
 
     bcs = (0.0, None, 1.0, None)
 
     u = solve_ode2(b, a, f, bcs)
 
-    soly = erf(x/(np.sqrt(2)*sigma))
-    sold = np.exp(-(x/(np.sqrt(2)*sigma))**2)*2/np.sqrt(np.pi)/(np.sqrt(2)*sigma)
-    assert abs(u.y - soly).max()/abs(soly).max() < epsy
-    assert abs(u.dx - sold).max()/abs(sold).max() < epsd
+    soly = erf(x / (np.sqrt(2) * sigma))
+    sold = (
+        np.exp(-((x / (np.sqrt(2) * sigma)) ** 2))
+        * 2
+        / np.sqrt(np.pi)
+        / (np.sqrt(2) * sigma)
+    )
+    assert abs(u.y - soly).max() / abs(soly).max() < epsy
+    assert abs(u.dx - sold).max() / abs(sold).max() < epsd
 
 
 def test_solve_ode2_s_identity():
@@ -363,34 +420,42 @@ def check_solve_s2(rtf, sigma=1.0, epsy=1e-10, epsd=1e-10):
     r = rtf.get_radii()
     z = np.zeros(len(r))
 
-    b = CubicSpline(2/r, -2/r**2, rtf)
+    b = CubicSpline(2 / r, -2 / r**2, rtf)
     a = CubicSpline(z, z, rtf)
 
-    rhoy = np.exp(-0.5*(r/sigma)**2)/sigma**3/(2*np.pi)**1.5
-    rhod = np.exp(-0.5*(r/sigma)**2)/sigma**3/(2*np.pi)**1.5*(-r/sigma)/sigma
-    fy = -4*np.pi*rhoy
-    fd = -4*np.pi*rhod
+    rhoy = np.exp(-0.5 * (r / sigma) ** 2) / sigma**3 / (2 * np.pi) ** 1.5
+    rhod = (
+        np.exp(-0.5 * (r / sigma) ** 2)
+        / sigma**3
+        / (2 * np.pi) ** 1.5
+        * (-r / sigma)
+        / sigma
+    )
+    fy = -4 * np.pi * rhoy
+    fd = -4 * np.pi * rhod
     f = CubicSpline(fy, fd, rtf)
 
-    bcs = (None, 0.0, 1.0/r[-1], None)
+    bcs = (None, 0.0, 1.0 / r[-1], None)
 
     u = solve_ode2(b, a, f, bcs)
 
-
-    s2s = np.sqrt(2)*sigma
-    soly = erf(r/s2s)/r
-    sold = np.exp(-(r/s2s)**2)*2/np.sqrt(np.pi)/s2s/r - erf(r/s2s)/r**2
+    s2s = np.sqrt(2) * sigma
+    soly = erf(r / s2s) / r
+    sold = (
+        np.exp(-((r / s2s) ** 2)) * 2 / np.sqrt(np.pi) / s2s / r - erf(r / s2s) / r**2
+    )
     if False:
-        print(abs(u.y - soly).max()/abs(soly).max())
-        print(abs(u.dx - sold).max()/abs(sold).max())
+        print(abs(u.y - soly).max() / abs(soly).max())
+        print(abs(u.dx - sold).max() / abs(sold).max())
         import matplotlib.pyplot as pt
+
         pt.clf()
-        pt.plot(r, u.y, label='numerical')
-        pt.plot(r, soly, label='exact')
+        pt.plot(r, u.y, label="numerical")
+        pt.plot(r, soly, label="exact")
         pt.legend(loc=0)
-        pt.savefig('s2.png')
-    assert abs(u.y - soly).max()/abs(soly).max() < epsy
-    assert abs(u.dx - sold).max()/abs(sold).max() < epsd
+        pt.savefig("s2.png")
+    assert abs(u.y - soly).max() / abs(soly).max() < epsy
+    assert abs(u.dx - sold).max() / abs(sold).max() < epsd
 
 
 def test_solve_ode2_s2_linear():
@@ -409,15 +474,19 @@ def check_solve_xexp(rtf, s=1.0):
     x = rtf.get_radii()
     o = np.ones(len(x))
 
-    b = CubicSpline(s*(2 + s*x), o*s**2, rtf)
-    a = CubicSpline(-s**3*x, -o*s**3, rtf)
-    f = CubicSpline(4*s*(1+s*x)*np.exp(s*x), 4*s**2*(2+s*x)*np.exp(s*x), rtf)
+    b = CubicSpline(s * (2 + s * x), o * s**2, rtf)
+    a = CubicSpline(-(s**3) * x, -o * s**3, rtf)
+    f = CubicSpline(
+        4 * s * (1 + s * x) * np.exp(s * x),
+        4 * s**2 * (2 + s * x) * np.exp(s * x),
+        rtf,
+    )
 
     bcs_base = [
-        x[0]*np.exp(s*x[0]),
-        (1+s*x[0])*np.exp(s*x[0]),
-        x[-1]*np.exp(s*x[-1]),
-        (1+s*x[-1])*np.exp(s*x[-1]),
+        x[0] * np.exp(s * x[0]),
+        (1 + s * x[0]) * np.exp(s * x[0]),
+        x[-1] * np.exp(s * x[-1]),
+        (1 + s * x[-1]) * np.exp(s * x[-1]),
     ]
     for i0 in range(2):
         for i1 in range(2, 4):
@@ -427,24 +496,25 @@ def check_solve_xexp(rtf, s=1.0):
 
             u = solve_ode2(b, a, f, bcs)
 
-            soly = x*np.exp(s*x)
-            sold = (1+s*x)*np.exp(s*x)
+            soly = x * np.exp(s * x)
+            sold = (1 + s * x) * np.exp(s * x)
             if False:
-                print(i0, i1, end=' ')
-                print(abs(u.y - soly).max()/abs(soly).max(), end=' ')
-                print(abs(u.dx - sold).max()/abs(sold).max())
-                print('%+10.5f  %+10.5f  %s' % (u.y[0], soly[0], bcs[0]))
-                print('%+10.5f  %+10.5f  %s' % (u.dx[0], sold[0], bcs[1]))
-                print('%+10.5f  %+10.5f  %s' % (u.y[-1], soly[-1], bcs[2]))
-                print('%+10.5f  %+10.5f  %s' % (u.dx[-1], sold[-1], bcs[3]))
+                print(i0, i1, end=" ")
+                print(abs(u.y - soly).max() / abs(soly).max(), end=" ")
+                print(abs(u.dx - sold).max() / abs(sold).max())
+                print("%+10.5f  %+10.5f  %s" % (u.y[0], soly[0], bcs[0]))
+                print("%+10.5f  %+10.5f  %s" % (u.dx[0], sold[0], bcs[1]))
+                print("%+10.5f  %+10.5f  %s" % (u.y[-1], soly[-1], bcs[2]))
+                print("%+10.5f  %+10.5f  %s" % (u.dx[-1], sold[-1], bcs[3]))
                 import matplotlib.pyplot as pt
+
                 pt.clf()
-                pt.plot(x, u.y, label='numerical')
-                pt.plot(x, soly, label='exact')
+                pt.plot(x, u.y, label="numerical")
+                pt.plot(x, soly, label="exact")
                 pt.legend(loc=0)
-                pt.savefig('xexp_%i_%i.png' % (i0, i1))
-            assert abs(u.y - soly).max()/abs(soly).max() < 1e-3
-            assert abs(u.dx - sold).max()/abs(sold).max() < 1e-3
+                pt.savefig("xexp_%i_%i.png" % (i0, i1))
+            assert abs(u.y - soly).max() / abs(soly).max() < 1e-3
+            assert abs(u.dx - sold).max() / abs(sold).max() < 1e-3
 
 
 def test_solve_ode2_xexp_identity():

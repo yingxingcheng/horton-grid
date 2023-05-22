@@ -31,17 +31,21 @@ def test_uig_integrate_gauss():
     naxis = 81
 
     # grid setup
-    offset = 0.5*spacing*(naxis-1)
-    origin = np.zeros(3, float)-offset
-    rvecs = np.identity(3)*spacing
+    offset = 0.5 * spacing * (naxis - 1)
+    origin = np.zeros(3, float) - offset
+    rvecs = np.identity(3) * spacing
     shape = np.array([naxis, naxis, naxis])
     pbc = np.ones(3, int)
     uig = UniformGrid(origin, rvecs, shape, pbc)
 
     # fill a 3D grid with a gaussian function
     x, y, z = np.indices(shape)
-    dsq = (x*spacing-offset)**2 + (y*spacing-offset)**2 + (z*spacing-offset)**2
-    data = np.exp(-0.5*dsq)/(2*np.pi)**(1.5)
+    dsq = (
+        (x * spacing - offset) ** 2
+        + (y * spacing - offset) ** 2
+        + (z * spacing - offset) ** 2
+    )
+    data = np.exp(-0.5 * dsq) / (2 * np.pi) ** (1.5)
 
     # compute the integral and compare with analytical result
     num_result = uig.integrate(data)
@@ -79,17 +83,19 @@ def test_index_wrap():
 
 def get_simple_test_uig():
     origin = np.array([0.1, -2.0, 3.1])
-    rvecs = np.array([
-        [1.0, 0.1, 0.2],
-        [0.1, 1.1, 0.2],
-        [0.0, -0.1, 1.0],
-    ])
-    #origin = np.array([0.0, 0.0, 0.0])
-    #rvecs = np.array([
+    rvecs = np.array(
+        [
+            [1.0, 0.1, 0.2],
+            [0.1, 1.1, 0.2],
+            [0.0, -0.1, 1.0],
+        ]
+    )
+    # origin = np.array([0.0, 0.0, 0.0])
+    # rvecs = np.array([
     #    [1.0, 0.0, 0.0],
     #    [0.0, 1.0, 0.0],
     #    [0.0, 0.0, 1.0],
-    #])
+    # ])
     shape = np.array([40, 40, 40])
     pbc = np.array([1, 0, 1])
     return UniformGrid(origin, rvecs, shape, pbc)
@@ -120,22 +126,45 @@ def test_get_ranges_rcut2():
 def test_dist_grid_point():
     uig = get_simple_test_uig()
     assert uig.dist_grid_point(uig.origin, np.array([0, 0, 0])) == 0.0
-    assert uig.dist_grid_point(uig.origin, np.array([0, 0, 1])) == (0.1**2+1.0)**0.5
-    assert uig.dist_grid_point(uig.origin, np.array([0, 1, 0])) == (0.1**2+1.1**2+0.2**2)**0.5
+    assert (
+        uig.dist_grid_point(uig.origin, np.array([0, 0, 1])) == (0.1**2 + 1.0) ** 0.5
+    )
+    assert (
+        uig.dist_grid_point(uig.origin, np.array([0, 1, 0]))
+        == (0.1**2 + 1.1**2 + 0.2**2) ** 0.5
+    )
 
     center = np.array([0.9, 2.5, 1.6])
     indexes = np.array([6, 3, -2])
     point = uig.origin + uig.get_grid_cell().to_cart(indexes.astype(float))
-    assert abs(uig.dist_grid_point(center, np.array([6, 3, -2])) - np.linalg.norm(center - point)) < 1e-10
+    assert (
+        abs(
+            uig.dist_grid_point(center, np.array([6, 3, -2]))
+            - np.linalg.norm(center - point)
+        )
+        < 1e-10
+    )
 
 
 def test_delta_grid_point():
     uig = get_simple_test_uig()
-    assert (uig.delta_grid_point(uig.origin, np.array([0, 0, 0])) == np.array([0.0, 0.0, 0.0])).all()
-    assert (uig.delta_grid_point(uig.origin, np.array([0, 0, 1])) == np.array([0.0, -0.1, 1.0])).all()
-    assert (uig.delta_grid_point(uig.origin, np.array([0, 1, 0])) == np.array([0.1, 1.1, 0.2])).all()
+    assert (
+        uig.delta_grid_point(uig.origin, np.array([0, 0, 0]))
+        == np.array([0.0, 0.0, 0.0])
+    ).all()
+    assert (
+        uig.delta_grid_point(uig.origin, np.array([0, 0, 1]))
+        == np.array([0.0, -0.1, 1.0])
+    ).all()
+    assert (
+        uig.delta_grid_point(uig.origin, np.array([0, 1, 0]))
+        == np.array([0.1, 1.1, 0.2])
+    ).all()
 
     center = np.array([0.9, 2.5, 1.6])
     indexes = np.array([6, 3, -2])
     point = uig.origin + uig.get_grid_cell().to_cart(indexes.astype(float))
-    assert abs(uig.delta_grid_point(center, np.array([6, 3, -2])) - (point - center)).max() < 1e-10
+    assert (
+        abs(uig.delta_grid_point(center, np.array([6, 3, -2])) - (point - center)).max()
+        < 1e-10
+    )

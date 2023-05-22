@@ -27,7 +27,7 @@ from horton import *  # pylint: disable=wildcard-import,unused-wildcard-import
 
 
 def check_consistency(rtf):
-    ts = np.random.uniform(0, rtf.npoint-1, 200)
+    ts = np.random.uniform(0, rtf.npoint - 1, 200)
     # consistency between radius and radius_array
     rs = np.zeros(ts.shape)
     rtf.radius(ts, rs)
@@ -93,17 +93,15 @@ def check_consistency(rtf):
 
 
 def check_deriv(rtf):
-    ts = np.random.uniform(0, rtf.npoint-1, 200)
+    ts = np.random.uniform(0, rtf.npoint - 1, 200)
     eps = 1e-5
-    ts0 = ts-eps/2
-    ts1 = ts+eps/2
-    fns = [(rtf.radius, rtf.deriv),
-           (rtf.deriv, rtf.deriv2),
-           (rtf.deriv2, rtf.deriv3)]
+    ts0 = ts - eps / 2
+    ts1 = ts + eps / 2
+    fns = [(rtf.radius, rtf.deriv), (rtf.deriv, rtf.deriv2), (rtf.deriv2, rtf.deriv3)]
     for fnr, fnd in fns:
         ds = fnd(ts)
-        dns = (fnr(ts1)-fnr(ts0))/eps
-        assert abs(ds-dns).max() < 1e-5
+        dns = (fnr(ts1) - fnr(ts0)) / eps
+        assert abs(ds - dns).max() < 1e-5
 
 
 def check_chop(rtf1):
@@ -171,7 +169,7 @@ def test_power_basics():
 
 
 def test_hyperbolic_basics():
-    rtf = HyperbolicRTransform(0.4/450, 1.0/450, 450)
+    rtf = HyperbolicRTransform(0.4 / 450, 1.0 / 450, 450)
     check_consistency(rtf)
     check_deriv(rtf)
 
@@ -208,15 +206,15 @@ def test_power_properties():
 
 
 def test_hyperbolic_properties():
-    rtf = HyperbolicRTransform(0.4/450, 1.0/450, 450)
-    assert rtf.a == 0.4/450
-    assert rtf.b == 1.0/450
+    rtf = HyperbolicRTransform(0.4 / 450, 1.0 / 450, 450)
+    assert rtf.a == 0.4 / 450
+    assert rtf.b == 1.0 / 450
     assert rtf.npoint == 450
 
 
 def test_exception_string():
     with assert_raises(TypeError):
-        RTransform.from_string('Fubar A 5')
+        RTransform.from_string("Fubar A 5")
 
 
 def test_identiy_string():
@@ -226,13 +224,12 @@ def test_identiy_string():
     assert rtf1.npoint == rtf2.npoint
 
     with assert_raises(ValueError):
-        RTransform.from_string('IdentityRTransform A')
+        RTransform.from_string("IdentityRTransform A")
     with assert_raises(ValueError):
-        RTransform.from_string('IdentityRTransform A 5 .1')
+        RTransform.from_string("IdentityRTransform A 5 .1")
 
-    rtf3 = RTransform.from_string('IdentityRTransform 8')
+    rtf3 = RTransform.from_string("IdentityRTransform 8")
     assert rtf3.npoint == 8
-
 
 
 def test_linear_string():
@@ -245,11 +242,11 @@ def test_linear_string():
     assert rtf1.alpha == rtf2.alpha
 
     with assert_raises(ValueError):
-        RTransform.from_string('LinearRTransform A 5')
+        RTransform.from_string("LinearRTransform A 5")
     with assert_raises(ValueError):
-        RTransform.from_string('LinearRTransform A 5 .1')
+        RTransform.from_string("LinearRTransform A 5 .1")
 
-    rtf3 = RTransform.from_string('LinearRTransform -1.0 12.15643216847 77')
+    rtf3 = RTransform.from_string("LinearRTransform -1.0 12.15643216847 77")
     assert rtf3.rmin == -1.0
     assert rtf3.rmax == 12.15643216847
     assert rtf3.npoint == 77
@@ -266,11 +263,11 @@ def test_exp_string():
     assert rtf1.alpha == rtf2.alpha
 
     with assert_raises(ValueError):
-        RTransform.from_string('ExpRTransform A 5')
+        RTransform.from_string("ExpRTransform A 5")
     with assert_raises(ValueError):
-        RTransform.from_string('ExpRTransform A 5 .1')
+        RTransform.from_string("ExpRTransform A 5 .1")
 
-    rtf3 = RTransform.from_string('ExpRTransform 1.0 12.15643216847 5')
+    rtf3 = RTransform.from_string("ExpRTransform 1.0 12.15643216847 5")
     assert rtf3.rmin == 1.0
     assert rtf3.rmax == 12.15643216847
     assert rtf3.npoint == 5
@@ -278,7 +275,9 @@ def test_exp_string():
 
 
 def test_power_string():
-    rtf1 = PowerRTransform(np.random.uniform(1e-3, 5e-3), np.random.uniform(2.0, 5.0), 11)
+    rtf1 = PowerRTransform(
+        np.random.uniform(1e-3, 5e-3), np.random.uniform(2.0, 5.0), 11
+    )
     s = rtf1.to_string()
     rtf2 = RTransform.from_string(s)
     assert rtf1.rmin == rtf2.rmin
@@ -287,11 +286,11 @@ def test_power_string():
     assert rtf1.npoint == rtf2.npoint
 
     with assert_raises(ValueError):
-        RTransform.from_string('PowerRTransform A 5')
+        RTransform.from_string("PowerRTransform A 5")
     with assert_raises(ValueError):
-        RTransform.from_string('PowerRTransform A 5 .1')
+        RTransform.from_string("PowerRTransform A 5 .1")
 
-    rtf3 = RTransform.from_string('PowerRTransform 0.02154 12.15643216847 5')
+    rtf3 = RTransform.from_string("PowerRTransform 0.02154 12.15643216847 5")
     assert rtf3.rmin == 0.02154
     assert rtf3.rmax == 12.15643216847
     assert rtf3.power > 2
@@ -299,7 +298,7 @@ def test_power_string():
 
 
 def test_hyperbolic_string():
-    rtf1 = HyperbolicRTransform(0.4/450, 1.0/450, 450)
+    rtf1 = HyperbolicRTransform(0.4 / 450, 1.0 / 450, 450)
     s = rtf1.to_string()
     rtf2 = RTransform.from_string(s)
     assert rtf1.a == rtf2.a
@@ -307,11 +306,11 @@ def test_hyperbolic_string():
     assert rtf1.npoint == rtf2.npoint
 
     with assert_raises(ValueError):
-        RTransform.from_string('HyperbolicRTransform A 5')
+        RTransform.from_string("HyperbolicRTransform A 5")
     with assert_raises(ValueError):
-        RTransform.from_string('HyperbolicRTransform A 5 .1')
+        RTransform.from_string("HyperbolicRTransform A 5 .1")
 
-    rtf3 = RTransform.from_string('HyperbolicRTransform 0.01 0.02315479 5')
+    rtf3 = RTransform.from_string("HyperbolicRTransform 0.01 0.02315479 5")
     assert rtf3.a == 0.01
     assert rtf3.b == 0.02315479
     assert rtf3.npoint == 5
@@ -359,9 +358,9 @@ def test_power_bounds():
 
 def test_hyperbolic_bounds():
     with assert_raises(ValueError):
-        HyperbolicRTransform(0, 1.0/450, 450)
+        HyperbolicRTransform(0, 1.0 / 450, 450)
     with assert_raises(ValueError):
-        HyperbolicRTransform(-0.1, 1.0/450, 450)
+        HyperbolicRTransform(-0.1, 1.0 / 450, 450)
     with assert_raises(ValueError):
         HyperbolicRTransform(0.4, 1.0, 450)
     with assert_raises(ValueError):

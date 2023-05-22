@@ -18,7 +18,7 @@
 # along with this program; if not, see <http://www.gnu.org/licenses/>
 #
 # --
-'''XYZ file format'''
+"""XYZ file format"""
 
 
 import numpy as np
@@ -27,19 +27,19 @@ from horton_grid.units import angstrom
 from horton_grid.periodic import periodic
 
 
-__all__ = ['load_xyz', 'dump_xyz']
+__all__ = ["load_xyz", "dump_xyz"]
 
 
 def load_xyz(filename):
-    '''Load a molecular geometry from a .xyz file.
+    """Load a molecular geometry from a .xyz file.
 
-       **Argument:**
+    **Argument:**
 
-       filename
-            The file to load the geometry from
+    filename
+         The file to load the geometry from
 
-       **Returns:** dictionary with ``title`, ``coordinates`` and ``numbers``.
-    '''
+    **Returns:** dictionary with ``title`, ``coordinates`` and ``numbers``.
+    """
     f = open(filename)
     size = int(next(f))
     title = next(f).strip()
@@ -48,34 +48,30 @@ def load_xyz(filename):
     for i in range(size):
         words = next(f).split()
         numbers[i] = periodic[words[0]].number
-        coordinates[i, 0] = float(words[1])*angstrom
-        coordinates[i, 1] = float(words[2])*angstrom
-        coordinates[i, 2] = float(words[3])*angstrom
+        coordinates[i, 0] = float(words[1]) * angstrom
+        coordinates[i, 1] = float(words[2]) * angstrom
+        coordinates[i, 2] = float(words[3]) * angstrom
     f.close()
-    return {
-        'title': title,
-        'coordinates': coordinates,
-        'numbers': numbers
-    }
+    return {"title": title, "coordinates": coordinates, "numbers": numbers}
 
 
 def dump_xyz(filename, data):
-    '''Write an ``.xyz`` file.
+    """Write an ``.xyz`` file.
 
-       **Arguments:**
+    **Arguments:**
 
-       filename
-            The name of the file to be written. This usually the extension
-            ".xyz".
+    filename
+         The name of the file to be written. This usually the extension
+         ".xyz".
 
-       data
-            An IOData instance. Must contain ``coordinates`` and ``numbers``.
-            May contain ``title``.
-    '''
-    with open(filename, 'w') as f:
+    data
+         An IOData instance. Must contain ``coordinates`` and ``numbers``.
+         May contain ``title``.
+    """
+    with open(filename, "w") as f:
         print(data.natom, file=f)
-        print(getattr(data, 'title', 'Created with HORTON'), file=f)
+        print(getattr(data, "title", "Created with HORTON"), file=f)
         for i in range(data.natom):
             n = periodic[data.numbers[i]].symbol
-            x, y, z = data.coordinates[i]/angstrom
-            print('%2s %15.10f %15.10f %15.10f' % (n, x, y, z), file=f)
+            x, y, z = data.coordinates[i] / angstrom
+            print("%2s %15.10f %15.10f %15.10f" % (n, x, y, z), file=f)

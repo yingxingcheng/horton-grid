@@ -48,33 +48,35 @@ def check_g_lincomb_dot_rvecs(cell):
 
 
 def test_cell_cubic():
-    rvecs = np.array([[9.865, 0.0, 0.0], [0.0, 9.865, 0.0], [0.0, 0.0, 9.865]])*angstrom
+    rvecs = (
+        np.array([[9.865, 0.0, 0.0], [0.0, 9.865, 0.0], [0.0, 0.0, 9.865]]) * angstrom
+    )
     cell = Cell(rvecs)
 
     # Test attributes
     assert cell.nvec == 3
     assert (cell.rvecs == rvecs).all()
-    assert (cell.rspacings == 9.865*angstrom).all()
-    assert (cell.gspacings == 1/(9.865*angstrom)).all()
-    assert abs(cell.volume - (9.865*angstrom)**3) < 1e-10
+    assert (cell.rspacings == 9.865 * angstrom).all()
+    assert (cell.gspacings == 1 / (9.865 * angstrom)).all()
+    assert abs(cell.volume - (9.865 * angstrom) ** 3) < 1e-10
     assert abs(np.dot(cell.gvecs, cell.rvecs.transpose()) - np.identity(3)).max() < 1e-5
     assert abs(np.dot(cell.gvecs.transpose(), cell.rvecs) - np.identity(3)).max() < 1e-5
     cell2 = Cell(-cell.rvecs)
-    assert abs(cell2.volume - (9.865*angstrom)**3) < 1e-10
+    assert abs(cell2.volume - (9.865 * angstrom) ** 3) < 1e-10
     for i in range(3):
         assert cell.get_rlength(i) == cell.rlengths[i]
         assert cell.get_glength(i) == cell.glengths[i]
         assert cell.get_rspacing(i) == cell.rspacings[i]
         assert cell.get_gspacing(i) == cell.gspacings[i]
-        assert abs(cell.get_rlength(i) - 1.0/cell.get_gspacing(i)) < 1e-10
-        assert abs(cell.get_glength(i) - 1.0/cell.get_rspacing(i)) < 1e-10
+        assert abs(cell.get_rlength(i) - 1.0 / cell.get_gspacing(i)) < 1e-10
+        assert abs(cell.get_glength(i) - 1.0 / cell.get_rspacing(i)) < 1e-10
 
     # Test methods (1)
-    vec1 = np.array([10.0, 0.0, 5.0])*angstrom
+    vec1 = np.array([10.0, 0.0, 5.0]) * angstrom
     cell.mic(vec1)
-    assert abs(vec1 - np.array([0.135, 0.0, -4.865])*angstrom).max() < 1e-10
+    assert abs(vec1 - np.array([0.135, 0.0, -4.865]) * angstrom).max() < 1e-10
     cell.add_rvec(vec1, np.array([1, 2, 3]))
-    assert abs(vec1 - np.array([10.0, 19.73, 24.73])*angstrom).max() < 1e-10
+    assert abs(vec1 - np.array([10.0, 19.73, 24.73]) * angstrom).max() < 1e-10
 
     # Test methods (2)
     check_frac_cart(cell)
@@ -101,11 +103,11 @@ def test_cell_triclinic():
         assert cell.get_glength(i) == cell.glengths[i]
         assert cell.get_rspacing(i) == cell.rspacings[i]
         assert cell.get_gspacing(i) == cell.gspacings[i]
-        assert abs(cell.get_rlength(i) - 1.0/cell.get_gspacing(i)) < 1e-10
-        assert abs(cell.get_glength(i) - 1.0/cell.get_rspacing(i)) < 1e-10
+        assert abs(cell.get_rlength(i) - 1.0 / cell.get_gspacing(i)) < 1e-10
+        assert abs(cell.get_glength(i) - 1.0 / cell.get_rspacing(i)) < 1e-10
 
     # Test methods (1)
-    vec1 = np.array([10.0, 0.0, 5.0])*angstrom
+    vec1 = np.array([10.0, 0.0, 5.0]) * angstrom
     cell.mic(vec1)
     cell.add_rvec(vec1, np.array([1, 2, 3]))
 
@@ -115,32 +117,35 @@ def test_cell_triclinic():
 
 
 def test_cell_parallellogram2d():
-    rvecs = np.array([[4.922, 0.0, 0.0], [2.462, 4.262, 0.0]])*angstrom
+    rvecs = np.array([[4.922, 0.0, 0.0], [2.462, 4.262, 0.0]]) * angstrom
     cell = Cell(rvecs)
 
     # Test attributes
     assert cell.nvec == 2
     assert (cell.rvecs == rvecs).all()
-    assert abs(cell.volume - np.linalg.norm(np.cross(cell.rvecs[0], cell.rvecs[1]))) < 1e-10
+    assert (
+        abs(cell.volume - np.linalg.norm(np.cross(cell.rvecs[0], cell.rvecs[1])))
+        < 1e-10
+    )
     assert abs(np.dot(cell.gvecs, cell.rvecs.transpose()) - np.identity(2)).max() < 1e-5
     for i in range(2):
         assert cell.get_rlength(i) == cell.rlengths[i]
         assert cell.get_glength(i) == cell.glengths[i]
         assert cell.get_rspacing(i) == cell.rspacings[i]
         assert cell.get_gspacing(i) == cell.gspacings[i]
-        assert abs(cell.get_rlength(i) - 1.0/cell.get_gspacing(i)) < 1e-10
-        assert abs(cell.get_glength(i) - 1.0/cell.get_rspacing(i)) < 1e-10
+        assert abs(cell.get_rlength(i) - 1.0 / cell.get_gspacing(i)) < 1e-10
+        assert abs(cell.get_glength(i) - 1.0 / cell.get_rspacing(i)) < 1e-10
     assert abs(cell.get_rlength(2) - 1.0) < 1e-10
     assert abs(cell.get_glength(2) - 1.0) < 1e-10
     assert abs(cell.get_rspacing(2) - 1.0) < 1e-10
     assert abs(cell.get_gspacing(2) - 1.0) < 1e-10
 
     # Test methods (1)
-    vec1 = np.array([10.0, 0.0, 105.0])*angstrom
+    vec1 = np.array([10.0, 0.0, 105.0]) * angstrom
     cell.mic(vec1)
-    assert abs(vec1 - np.array([0.156, 0.0, 105])*angstrom).max() < 1e-3
+    assert abs(vec1 - np.array([0.156, 0.0, 105]) * angstrom).max() < 1e-3
     cell.add_rvec(vec1, np.array([1, 2]))
-    assert abs(vec1 - np.array([10.002, 8.524, 105])*angstrom).max() < 1e-3
+    assert abs(vec1 - np.array([10.002, 8.524, 105]) * angstrom).max() < 1e-3
 
     # Test methods (2)
     check_frac_cart(cell)
@@ -148,7 +153,7 @@ def test_cell_parallellogram2d():
 
 
 def test_cell_1d():
-    rvecs = np.array([[5.075, 0.187, 0.055]])*angstrom
+    rvecs = np.array([[5.075, 0.187, 0.055]]) * angstrom
     cell = Cell(rvecs)
 
     # Test attributes
@@ -162,21 +167,21 @@ def test_cell_1d():
     assert cell.get_glength(0) == cell.glengths[0]
     assert cell.get_rspacing(0) == cell.rspacings[0]
     assert cell.get_gspacing(0) == cell.gspacings[0]
-    assert abs(cell.get_rlength(0) - 1.0/cell.get_gspacing(0)) < 1e-10
-    assert abs(cell.get_glength(0) - 1.0/cell.get_rspacing(0)) < 1e-10
+    assert abs(cell.get_rlength(0) - 1.0 / cell.get_gspacing(0)) < 1e-10
+    assert abs(cell.get_glength(0) - 1.0 / cell.get_rspacing(0)) < 1e-10
     for i in range(1, 3):
         assert abs(cell.get_rlength(i) - 1.0) < 1e-10
         assert abs(cell.get_glength(i) - 1.0) < 1e-10
         assert abs(cell.get_rspacing(i) - 1.0) < 1e-10
         assert abs(cell.get_gspacing(i) - 1.0) < 1e-10
-    assert abs(cell.get_rspacing(0)*cell.get_gspacing(0) - 1.0) < 1e-10
+    assert abs(cell.get_rspacing(0) * cell.get_gspacing(0) - 1.0) < 1e-10
 
     # Test methods (1)
-    vec1 = np.array([10.0, 0.0, 105.0])*angstrom
+    vec1 = np.array([10.0, 0.0, 105.0]) * angstrom
     cell.mic(vec1)
-    assert abs(vec1 - np.array([-0.15, -0.374, 104.89])*angstrom).max() < 1e-3
+    assert abs(vec1 - np.array([-0.15, -0.374, 104.89]) * angstrom).max() < 1e-3
     cell.add_rvec(vec1, np.array([1]))
-    assert abs(vec1 - np.array([4.925, -0.187, 104.945])*angstrom).max() < 1e-3
+    assert abs(vec1 - np.array([4.925, -0.187, 104.945]) * angstrom).max() < 1e-3
 
     # Test methods (2)
     check_frac_cart(cell)
@@ -184,7 +189,12 @@ def test_cell_1d():
 
 
 def test_cell_quartz():
-    cell = Cell(np.array([[0.0, 0.0, 5.405222], [0.0, 4.913416, 0.0], [-4.255154, 2.456708, 0.0]])*angstrom)
+    cell = Cell(
+        np.array(
+            [[0.0, 0.0, 5.405222], [0.0, 4.913416, 0.0], [-4.255154, 2.456708, 0.0]]
+        )
+        * angstrom
+    )
 
     # Test attributes
     assert cell.rvecs.shape == (3, 3)
@@ -196,8 +206,8 @@ def test_cell_quartz():
         assert cell.get_glength(i) == cell.glengths[i]
         assert cell.get_rspacing(i) == cell.rspacings[i]
         assert cell.get_gspacing(i) == cell.gspacings[i]
-        assert abs(cell.get_rlength(i) - 1.0/cell.get_gspacing(i)) < 1e-10
-        assert abs(cell.get_glength(i) - 1.0/cell.get_rspacing(i)) < 1e-10
+        assert abs(cell.get_rlength(i) - 1.0 / cell.get_gspacing(i)) < 1e-10
+        assert abs(cell.get_glength(i) - 1.0 / cell.get_rspacing(i)) < 1e-10
 
     # Test methods (2)
     check_frac_cart(cell)
@@ -227,11 +237,11 @@ def test_cell_0d():
         assert abs(cell.get_gspacing(i) - 1.0) < 1e-10
 
     # Test methods (1)
-    vec1 = np.array([10.0, 0.0, 105.0])*angstrom
+    vec1 = np.array([10.0, 0.0, 105.0]) * angstrom
     cell.mic(vec1)
-    assert abs(vec1 - np.array([10.0, 0.0, 105.0])*angstrom).max() < 1e-3
+    assert abs(vec1 - np.array([10.0, 0.0, 105.0]) * angstrom).max() < 1e-3
     cell.add_rvec(vec1, np.array([], dtype=int))
-    assert abs(vec1 - np.array([10.0, 0.0, 105.0])*angstrom).max() < 1e-3
+    assert abs(vec1 - np.array([10.0, 0.0, 105.0]) * angstrom).max() < 1e-3
 
     # Test methods (2)
     check_frac_cart(cell)
@@ -239,26 +249,35 @@ def test_cell_0d():
 
 
 def setup_ranges_rcut(nvec):
-    a = 10**np.random.uniform(-1, 1)
+    a = 10 ** np.random.uniform(-1, 1)
     cell = get_random_cell(a, nvec)
 
-    origin = np.random.uniform(-3*a, 3*a, 3)
-    center = np.random.uniform(-3*a, 3*a, 3)
-    rcut = np.random.uniform(0.2*a, 5*a)
+    origin = np.random.uniform(-3 * a, 3 * a, 3)
+    center = np.random.uniform(-3 * a, 3 * a, 3)
+    rcut = np.random.uniform(0.2 * a, 5 * a)
 
-    ranges_begin, ranges_end = cell.get_ranges_rcut(origin-center, rcut)
-    ranges_low = ranges_begin-2
-    ranges_high = ranges_end+2
+    ranges_begin, ranges_end = cell.get_ranges_rcut(origin - center, rcut)
+    ranges_low = ranges_begin - 2
+    ranges_high = ranges_end + 2
 
     return cell, origin, center, rcut, ranges_begin, ranges_end, ranges_low, ranges_high
 
 
-@attr('slow')
+@attr("slow")
 def test_ranges_rcut_3d():
     counter = 0
     while True:
-        cell, origin, center, rcut, ranges_begin, ranges_end, ranges_low, ranges_high = setup_ranges_rcut(3)
-        npoint = np.product(ranges_high-ranges_low)
+        (
+            cell,
+            origin,
+            center,
+            rcut,
+            ranges_begin,
+            ranges_end,
+            ranges_low,
+            ranges_high,
+        ) = setup_ranges_rcut(3)
+        npoint = np.product(ranges_high - ranges_low)
         if npoint > 10000:
             continue
 
@@ -266,9 +285,14 @@ def test_ranges_rcut_3d():
         for i0 in range(ranges_low[0], ranges_high[0]):
             for i1 in range(ranges_low[1], ranges_high[1]):
                 for i2 in range(ranges_low[2], ranges_high[2]):
-                    if (i0 >= ranges_begin[0] and i0 < ranges_end[0] and
-                        i1 >= ranges_begin[1] and i1 < ranges_end[1] and
-                        i2 >= ranges_begin[2] and i2 < ranges_end[2]):
+                    if (
+                        i0 >= ranges_begin[0]
+                        and i0 < ranges_end[0]
+                        and i1 >= ranges_begin[1]
+                        and i1 < ranges_end[1]
+                        and i2 >= ranges_begin[2]
+                        and i2 < ranges_end[2]
+                    ):
                         continue
                     tmp = origin.copy()
                     cell.add_rvec(tmp, np.array([i0, i1, i2]))
@@ -282,13 +306,26 @@ def test_ranges_rcut_3d():
 def test_ranges_rcut_2d():
     counter = 0
     while True:
-        cell, origin, center, rcut, ranges_begin, ranges_end, ranges_low, ranges_high = setup_ranges_rcut(2)
+        (
+            cell,
+            origin,
+            center,
+            rcut,
+            ranges_begin,
+            ranges_end,
+            ranges_low,
+            ranges_high,
+        ) = setup_ranges_rcut(2)
 
         # test if distances to points outside the ranges are always outside rcut
         for i0 in range(ranges_low[0], ranges_high[0]):
             for i1 in range(ranges_low[1], ranges_high[1]):
-                if (i0 >= ranges_begin[0] and i0 < ranges_end[0] and
-                    i1 >= ranges_begin[1] and i1 < ranges_end[1]):
+                if (
+                    i0 >= ranges_begin[0]
+                    and i0 < ranges_end[0]
+                    and i1 >= ranges_begin[1]
+                    and i1 < ranges_end[1]
+                ):
                     continue
                 tmp = origin.copy()
                 cell.add_rvec(tmp, np.array([i0, i1]))
@@ -302,7 +339,16 @@ def test_ranges_rcut_2d():
 def test_ranges_rcut_1d():
     counter = 0
     while True:
-        cell, origin, center, rcut, ranges_begin, ranges_end, ranges_low, ranges_high = setup_ranges_rcut(1)
+        (
+            cell,
+            origin,
+            center,
+            rcut,
+            ranges_begin,
+            ranges_end,
+            ranges_low,
+            ranges_high,
+        ) = setup_ranges_rcut(1)
 
         # test if distances to points outside the ranges are always outside rcut
         for i0 in range(ranges_low[0], ranges_high[0]):
@@ -320,11 +366,11 @@ def test_ranges_rcut_1d():
 def test_ranges_rcut_0d():
     cell = Cell(None)
     a = 0.25
-    origin = np.random.uniform(-3*a, 3*a, 3)
-    center = np.random.uniform(-3*a, 3*a, 3)
-    rcut = np.random.uniform(0.2*a, 5*a)
+    origin = np.random.uniform(-3 * a, 3 * a, 3)
+    center = np.random.uniform(-3 * a, 3 * a, 3)
+    rcut = np.random.uniform(0.2 * a, 5 * a)
 
-    ranges_begin, ranges_end = cell.get_ranges_rcut(origin-center, rcut)
+    ranges_begin, ranges_end = cell.get_ranges_rcut(origin - center, rcut)
     assert ranges_begin.size == 0
     assert ranges_begin.shape == (0,)
     assert ranges_end.size == 0
@@ -354,6 +400,7 @@ def check_from_parameters(cell0):
     if angles0.size > 0:
         assert abs(angles0 - angles1).max() < 1e-10
 
+
 def test_from_parameters1():
     for i in range(10):
         cell0 = get_random_cell(1.0, 1)
@@ -374,4 +421,4 @@ def test_from_parameters3():
 
 def test_no_initvoid():
     with assert_raises(TypeError):
-        cell = Cell(initvoid=True)
+        Cell(initvoid=True)

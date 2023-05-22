@@ -18,22 +18,25 @@
 # along with this program; if not, see <http://www.gnu.org/licenses/>
 #
 # --
-'''Definition of all excpetions in HORTON'''
+"""Definition of all excpetions in HORTON"""
 
 
 class SymmetryError(Exception):
-    '''Exception raised when some symmetry algorithm fails'''
+    """Exception raised when some symmetry algorithm fails"""
+
     pass
 
 
 class ElectronCountError(ValueError):
-    '''Exception raised when a negative number of electron is encountered, or
-       when more electrons than basis functions are requested.
-    '''
+    """Exception raised when a negative number of electron is encountered, or
+    when more electrons than basis functions are requested.
+    """
+
     pass
 
 
 class NoSCFConvergence(Exception):
-    '''Exception raised when an SCF algorithm does not reach the convergence
-       threshold in the specified number of iterations'''
+    """Exception raised when an SCF algorithm does not reach the convergence
+    threshold in the specified number of iterations"""
+
     pass

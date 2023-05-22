@@ -29,37 +29,42 @@ from horton.test.common import tmpdir
 
 def test_locked1():
     # just a silly test
-    with tmpdir('horton.scripts.test.test_common.test_locked1') as dn:
-        with LockedH5File('%s/foo.h5' % dn, "w") as f:
+    with tmpdir("horton.scripts.test.test_common.test_locked1") as dn:
+        with LockedH5File("%s/foo.h5" % dn, "w"):
             pass
 
 
 def test_locked2():
     # test error handling in h5.File constructor
     with assert_raises(IOError):
-        with tmpdir('horton.scripts.test.test_common.test_locked2') as dn:
-            with LockedH5File('%s/foo.h5' % dn, mode='r', wait=0.1, count=3) as f:
+        with tmpdir("horton.scripts.test.test_common.test_locked2") as dn:
+            with LockedH5File("%s/foo.h5" % dn, mode="r", wait=0.1, count=3):
                 pass
 
 
 def test_locked3():
     # test error handling in h5.File constructor
     with assert_raises(ValueError):
-        with LockedH5File('horton.scripts.test.test_common.test_locked3.h5', driver='fubar', wait=0.1, count=3) as f:
+        with LockedH5File(
+            "horton.scripts.test.test_common.test_locked3.h5",
+            driver="fubar",
+            wait=0.1,
+            count=3,
+        ):
             pass
 
 
 def test_locked4():
     # test error handling of wrong driver
     with assert_raises(ValueError):
-        with tmpdir('horton.scripts.test.test_common.test_locked4') as dn:
-            with LockedH5File('%s/foo.h5' % dn, "w", driver='core') as f:
+        with tmpdir("horton.scripts.test.test_common.test_locked4") as dn:
+            with LockedH5File("%s/foo.h5" % dn, "w", driver="core"):
                 pass
 
 
 def test_locked5():
     # test error handling in with clause
     with assert_raises(RuntimeError):
-        with tmpdir('horton.scripts.test.test_common.test_locked5') as dn:
-            with LockedH5File('%s/foo.h5' % dn, "w") as f:
+        with tmpdir("horton.scripts.test.test_common.test_locked5") as dn:
+            with LockedH5File("%s/foo.h5" % dn, "w"):
                 raise RuntimeError

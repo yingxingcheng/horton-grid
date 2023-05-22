@@ -18,7 +18,7 @@
 # along with this program; if not, see <http://www.gnu.org/licenses/>
 #
 # --
-'''Becke-style numerical Poisson solver'''
+"""Becke-style numerical Poisson solver"""
 
 import numpy as np
 
@@ -27,24 +27,26 @@ from horton_grid.grid.cext import CubicSpline, PotentialExtrapolation
 from horton_grid.grid.ode2 import solve_ode2
 from horton_grid.grid.radial import RadialGrid
 
-__all__ = ['solve_poisson_becke']
+__all__ = ["solve_poisson_becke"]
 
 
-@timer.with_section('Becke Poisson')
+@timer.with_section("Becke Poisson")
 def solve_poisson_becke(density_decomposition):
-    '''Compute the electrostatic potential of a density expanded in real spherical harmonics
+    """Compute the electrostatic potential of a density expanded in real spherical harmonics
 
-       **Arguments:**
+    **Arguments:**
 
-       density_decomposition
-            A list of cubic splines returned by the method
-            AtomicGrid.get_spherical_decomposition.
+    density_decomposition
+         A list of cubic splines returned by the method
+         AtomicGrid.get_spherical_decomposition.
 
-       The returned list of splines is a spherical decomposition of the
-       hartree potential (felt by a particle with the same charge unit as the
-       density).
-    '''
-    biblio.cite('becke1988_poisson', 'the numerical integration of the Poisson equation')
+    The returned list of splines is a spherical decomposition of the
+    hartree potential (felt by a particle with the same charge unit as the
+    density).
+    """
+    biblio.cite(
+        "becke1988_poisson", "the numerical integration of the Poisson equation"
+    )
     np.seterr(invalid="print")
 
     lmax = np.sqrt(len(density_decomposition)) - 1
@@ -66,18 +68,26 @@ def solve_poisson_becke(density_decomposition):
             fy = -4 * np.pi * rho.y
             fd = -4 * np.pi * rho.dx
             f = CubicSpline(fy, fd, rtf)
-            b = CubicSpline(2 / radii, -2 / radii ** 2, rtf)
-            a = CubicSpline(-l * (l + 1) * radii ** -2, 2 * l * (l + 1) * radii ** -3, rtf)
+            b = CubicSpline(2 / radii, -2 / radii**2, rtf)
+            a = CubicSpline(
+                -l * (l + 1) * radii**-2, 2 * l * (l + 1) * radii**-3, rtf
+            )
             # Derivation of boundary condition at rmax:
             # Multiply differential equation with r**l and integrate. Using
             # partial integration and the fact that V(r)=A/r**(l+1) for large
             # r, we find -(2l+1)A=-4pi*int_0^infty r**2 r**l rho(r) and so
             # V(rmax) = A/rmax**(l+1) = integrate(r**l rho(r))/(2l+1)/rmax**(l+1)
-            V_rmax = rgrid.integrate(rho.y * radii ** l) / radii[-1] ** (l + 1) / (2 * l + 1)
+            V_rmax = (
+                rgrid.integrate(rho.y * radii**l) / radii[-1] ** (l + 1) / (2 * l + 1)
+            )
             # Derivation of boundary condition at rmin:
             # Same as for rmax, but multiply differential equation with r**(-l-1)
             # and assume that V(r)=B*r**l for small r.
-            V_rmin = rgrid.integrate(rho.y * radii ** (-l - 1)) * radii[0] ** (l) / (2 * l + 1)
+            V_rmin = (
+                rgrid.integrate(rho.y * radii ** (-l - 1))
+                * radii[0] ** (l)
+                / (2 * l + 1)
+            )
             bcs = (V_rmin, None, V_rmax, None)
             v = solve_ode2(b, a, f, bcs, PotentialExtrapolation(l))
             result.append(v)

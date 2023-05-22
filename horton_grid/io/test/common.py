@@ -23,37 +23,41 @@
 import numpy as np
 
 from horton.cext import compute_nucnuc
-from horton.meanfield.hamiltonian import REffHam, \
-    UEffHam
-from horton.meanfield.observable import RTwoIndexTerm, \
-    RDirectTerm, RExchangeTerm, UTwoIndexTerm, \
-    UDirectTerm, UExchangeTerm
+from horton.meanfield.hamiltonian import REffHam, UEffHam
+from horton.meanfield.observable import (
+    RTwoIndexTerm,
+    RDirectTerm,
+    RExchangeTerm,
+    UTwoIndexTerm,
+    UDirectTerm,
+    UExchangeTerm,
+)
 from horton.part.mulliken import get_mulliken_operators
 
 
-__all__ = ['compute_mulliken_charges', 'compute_hf_energy']
+__all__ = ["compute_mulliken_charges", "compute_hf_energy"]
 
 
 def compute_mulliken_charges(obasis, pseudo_numbers, dm):
     operators = get_mulliken_operators(obasis)
-    populations = np.array([np.einsum('ab,ba', operator, dm) for operator in operators])
+    populations = np.array([np.einsum("ab,ba", operator, dm) for operator in operators])
     assert pseudo_numbers.shape == populations.shape
     return pseudo_numbers - np.array(populations)
 
 
 def compute_hf_energy(mol):
-    olp = mol.obasis.compute_overlap()
+    mol.obasis.compute_overlap()
     kin = mol.obasis.compute_kinetic()
     na = mol.obasis.compute_nuclear_attraction(mol.coordinates, mol.pseudo_numbers)
     er = mol.obasis.compute_electron_repulsion()
-    external = {'nn': compute_nucnuc(mol.coordinates, mol.pseudo_numbers)}
-    if hasattr(mol, 'orb_beta'):
+    external = {"nn": compute_nucnuc(mol.coordinates, mol.pseudo_numbers)}
+    if hasattr(mol, "orb_beta"):
         # assuming unrestricted
         terms = [
-            UTwoIndexTerm(kin, 'kin'),
-            UDirectTerm(er, 'hartree'),
-            UExchangeTerm(er, 'x_hf'),
-            UTwoIndexTerm(na, 'ne'),
+            UTwoIndexTerm(kin, "kin"),
+            UDirectTerm(er, "hartree"),
+            UExchangeTerm(er, "x_hf"),
+            UTwoIndexTerm(na, "ne"),
         ]
         ham = UEffHam(terms, external)
         dm_alpha = mol.orb_alpha.to_dm()
@@ -62,10 +66,10 @@ def compute_hf_energy(mol):
     else:
         # assuming restricted
         terms = [
-            RTwoIndexTerm(kin, 'kin'),
-            RDirectTerm(er, 'hartree'),
-            RExchangeTerm(er, 'x_hf'),
-            RTwoIndexTerm(na, 'ne'),
+            RTwoIndexTerm(kin, "kin"),
+            RDirectTerm(er, "hartree"),
+            RExchangeTerm(er, "x_hf"),
+            RTwoIndexTerm(na, "ne"),
         ]
         ham = REffHam(terms, external)
         dm_alpha = mol.orb_alpha.to_dm()

@@ -18,7 +18,7 @@
 # along with this program; if not, see <http://www.gnu.org/licenses/>
 #
 # --
-'''Numerical integration grids'''
+"""Numerical integration grids"""
 
 
 from horton_grid.grid.base import *

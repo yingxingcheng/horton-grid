@@ -28,32 +28,38 @@ from horton.test.common import tmpdir
 
 
 def test_load_water_number():
-    fn = context.get_fn('test/water_number.xyz')
+    fn = context.get_fn("test/water_number.xyz")
     mol = IOData.from_file(fn)
     check_water(mol)
 
 
 def test_load_water_element():
-    fn = context.get_fn('test/water_element.xyz')
+    fn = context.get_fn("test/water_element.xyz")
     mol = IOData.from_file(fn)
     check_water(mol)
 
 
 def check_water(mol):
-    assert mol.title == 'Water'
+    assert mol.title == "Water"
     assert mol.numbers[0] == 1
     assert mol.numbers[1] == 8
     assert mol.numbers[2] == 1
-    assert abs(np.linalg.norm(mol.coordinates[0] - mol.coordinates[1])/angstrom - 0.96) < 1e-5
-    assert abs(np.linalg.norm(mol.coordinates[2] - mol.coordinates[1])/angstrom - 0.96) < 1e-5
+    assert (
+        abs(np.linalg.norm(mol.coordinates[0] - mol.coordinates[1]) / angstrom - 0.96)
+        < 1e-5
+    )
+    assert (
+        abs(np.linalg.norm(mol.coordinates[2] - mol.coordinates[1]) / angstrom - 0.96)
+        < 1e-5
+    )
 
 
 def test_load_dump_consistency():
-    mol0 = IOData.from_file(context.get_fn('test/ch3_hf_sto3g.fchk'))
+    mol0 = IOData.from_file(context.get_fn("test/ch3_hf_sto3g.fchk"))
 
-    with tmpdir('horton.io.test.test_xyz.test_load_dump_consistency') as dn:
-        mol0.to_file('%s/test.xyz' % dn)
-        mol1 = IOData.from_file('%s/test.xyz' % dn)
+    with tmpdir("horton.io.test.test_xyz.test_load_dump_consistency") as dn:
+        mol0.to_file("%s/test.xyz" % dn)
+        mol1 = IOData.from_file("%s/test.xyz" % dn)
 
     assert mol0.title == mol1.title
     assert (mol0.numbers == mol1.numbers).all()

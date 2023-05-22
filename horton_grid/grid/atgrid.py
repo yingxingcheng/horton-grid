@@ -50,7 +50,13 @@ __all__ = [
 
 class AtomicGrid(IntGrid):
     def __init__(
-        self, number, pseudo_number, center, agspec="medium", random_rotate=True, points=None
+        self,
+        number,
+        pseudo_number,
+        center,
+        agspec="medium",
+        random_rotate=True,
+        points=None,
     ):
         """
         **Arguments:**
@@ -177,7 +183,9 @@ class AtomicGrid(IntGrid):
                 ]
             )
         # Cite reference
-        biblio.cite("lebedev1999", "the use of Lebedev-Laikov grids (quadrature on a sphere)")
+        biblio.cite(
+            "lebedev1999", "the use of Lebedev-Laikov grids (quadrature on a sphere)"
+        )
 
     @timer.with_section("Create spher")
     def get_spherical_average(self, *args, **kwargs):
@@ -279,7 +287,9 @@ class AtomicGrid(IntGrid):
             mask = lmaxs < 2 * l
             for m in range(-l, l + 1):
                 f = angular_ints[:, counter].copy()
-                f *= np.sqrt(4 * np.pi * (2 * l + 1))  # proper norm for spherical harmonics
+                f *= np.sqrt(
+                    4 * np.pi * (2 * l + 1)
+                )  # proper norm for spherical harmonics
                 f[mask] = 0  # mask out unreliable results
                 results.append(CubicSpline(f, rtransform=self.rgrid.rtransform))
                 counter += 1
@@ -386,7 +396,9 @@ class AtomicGridSpec(object):
             self.name = "custom"
             self._init_members_from_list(definition)
         else:
-            raise ValueError("Could not parse the definition of the atomic grid specification.")
+            raise ValueError(
+                "Could not parse the definition of the atomic grid specification."
+            )
 
     @classmethod
     def from_hdf5(cls, grp):
@@ -394,7 +406,12 @@ class AtomicGridSpec(object):
         for ds in grp.values():
             rtransform = RTransform.from_string(ds.attrs["rtransform"])
             records.append(
-                (ds.attrs["number"], ds.attrs["pseudo_number"], RadialGrid(rtransform), ds[:])
+                (
+                    ds.attrs["number"],
+                    ds.attrs["pseudo_number"],
+                    RadialGrid(rtransform),
+                    ds[:],
+                )
             )
         return AtomicGridSpec(records)
 
@@ -404,7 +421,9 @@ class AtomicGridSpec(object):
         for number in self.members:
             for pseudo_number, rgrid, nlls in self.members.get(number):
                 if selection is None or (number, pseudo_number) in selection:
-                    ds = grp.create_dataset("%03i_%03i" % (number, pseudo_number), data=nlls)
+                    ds = grp.create_dataset(
+                        "%03i_%03i" % (number, pseudo_number), data=nlls
+                    )
                     ds.attrs["number"] = number
                     ds.attrs["pseudo_number"] = pseudo_number
                     ds.attrs["rtransform"] = rgrid.rtransform.to_string()
@@ -437,7 +456,9 @@ class AtomicGridSpec(object):
         rgrid, nlls = members
         nlls = _normalize_nlls(nlls, rgrid.size)
         # Assign this grid specification or each element
-        self.members = dict((number, [(number, rgrid, nlls)]) for number in range(1, 119))
+        self.members = dict(
+            (number, [(number, rgrid, nlls)]) for number in range(1, 119)
+        )
 
     def _init_members_from_list(self, members):
         self.members = {}
@@ -489,7 +510,8 @@ class AtomicGridSpec(object):
             self._init_members_from_tuple((rgrid, nll))
         else:
             raise ValueError(
-                'Could not interpret atomic grid specification string: "%s"' % definition
+                'Could not interpret atomic grid specification string: "%s"'
+                % definition
             )
 
     def _load(self, filename):

@@ -18,39 +18,40 @@
 # along with this program; if not, see <http://www.gnu.org/licenses/>
 #
 # --
-'''Avoid recomputation of earlier results and reallocation of existing arrays
+"""Avoid recomputation of earlier results and reallocation of existing arrays
 
    In principle, the ``JustOnceClass`` and the ``Cache`` can be used
    independently, but in some cases it makes a lot of sense to combine them.
    See for example the density partitioning code in ``horton.part``.
-'''
+"""
 
 
 import numpy as np
 
 
-__all__ = ['JustOnceClass', 'just_once', 'Cache']
+__all__ = ["JustOnceClass", "just_once", "Cache"]
 
 
 class JustOnceClass(object):
-    '''Base class for classes with methods that should never be executed twice.
+    """Base class for classes with methods that should never be executed twice.
 
-       In typically applications, these methods get called many times, but
-       only during the first call, an actual computation is carried out. This
-       way, the caller can safely call a method, just to make sure that a
-       required result is computed.
+    In typically applications, these methods get called many times, but
+    only during the first call, an actual computation is carried out. This
+    way, the caller can safely call a method, just to make sure that a
+    required result is computed.
 
-       All methods in the subclasses that should have this feature, must be
-       given the ``just_once`` decoratore, e.g. ::
+    All methods in the subclasses that should have this feature, must be
+    given the ``just_once`` decoratore, e.g. ::
 
-           class Example(JustOnceClass):
-               @just_once
-               def do_something():
-                   self.foo = self.bar
+        class Example(JustOnceClass):
+            @just_once
+            def do_something():
+                self.foo = self.bar
 
-       When all results are outdated, one can call the ``clear`` method
-       to forget which methods were called already.
-    '''
+    When all results are outdated, one can call the ``clear`` method
+    to forget which methods were called already.
+    """
+
     def __init__(self):
         self._done_just_once = set([])
 
@@ -63,27 +64,30 @@ class JustOnceClass(object):
 
 def just_once(fn):
     def wrapper(instance):
-        if not hasattr(instance, '_done_just_once'):
-            raise TypeError('Missing hidden _done_just_once. Forgot to call JustOnceClass.__init__()?')
+        if not hasattr(instance, "_done_just_once"):
+            raise TypeError(
+                "Missing hidden _done_just_once. Forgot to call JustOnceClass.__init__()?"
+            )
         if fn.__name__ in instance._done_just_once:
             return
         fn(instance)
         instance._done_just_once.add(fn.__name__)
+
     wrapper.__doc__ = fn.__doc__
     return wrapper
 
 
 def _normalize_alloc(alloc):
-    '''Normalize the alloc argument of the from_alloc and check_alloc methods'''
-    if not hasattr(alloc, '__len__'):
+    """Normalize the alloc argument of the from_alloc and check_alloc methods"""
+    if not hasattr(alloc, "__len__"):
         alloc = (alloc,)
     if len(alloc) == 0:
-        raise TypeError('Alloc can not be an empty list')
+        raise TypeError("Alloc can not be an empty list")
     return alloc
 
 
 def _normalize_tags(tags):
-    '''Normalize the tags argument of the CacheItem constructor'''
+    """Normalize the tags argument of the CacheItem constructor"""
     if tags is None:
         return set([])
     else:
@@ -91,19 +95,20 @@ def _normalize_tags(tags):
 
 
 class CacheItem(object):
-    '''A container for an object stored in a Cache instance'''
+    """A container for an object stored in a Cache instance"""
+
     def __init__(self, value, tags=None):
-        '''
-           **Arguments:**
+        """
+        **Arguments:**
 
-           value
-                The object stored in this container
+        value
+             The object stored in this container
 
-           **Optional arguments:**
+        **Optional arguments:**
 
-           tags
-                Tags to be associated with the object
-        '''
+        tags
+             Tags to be associated with the object
+        """
         self._value = value
         self._valid = True
         self._tags = _normalize_tags(tags)
@@ -118,19 +123,21 @@ class CacheItem(object):
     def check_alloc(self, alloc):
         alloc = _normalize_alloc(alloc)
         # check if the array has the correct shape and dtype
-        if not (isinstance(self._value, np.ndarray) and
-                self._value.shape == tuple(alloc) and
-                issubclass(self._value.dtype.type, float)):
-            raise TypeError('The stored item does not match the given alloc.')
+        if not (
+            isinstance(self._value, np.ndarray)
+            and self._value.shape == tuple(alloc)
+            and issubclass(self._value.dtype.type, float)
+        ):
+            raise TypeError("The stored item does not match the given alloc.")
 
     def check_tags(self, tags):
         tags = _normalize_tags(tags)
         if tags != self._tags:
-            raise ValueError('Tags do not match.')
+            raise ValueError("Tags do not match.")
 
     def _get_value(self):
         if not self._valid:
-            raise ValueError('This cached item is not valid.')
+            raise ValueError("This cached item is not valid.")
         return self._value
 
     value = property(_get_value)
@@ -146,14 +153,14 @@ class CacheItem(object):
     tags = property(_get_tags)
 
     def clear(self):
-        '''Mark the item as invalid and clear the contents of the object.
+        """Mark the item as invalid and clear the contents of the object.
 
-           **Returns:** A boolean indicating that clearing was successful
-        '''
+        **Returns:** A boolean indicating that clearing was successful
+        """
         self._valid = False
         if isinstance(self._value, np.ndarray):
             self._value[:] = 0.0
-        elif hasattr(self._value, '__clear__') and callable(self._value.__clear__):
+        elif hasattr(self._value, "__clear__") and callable(self._value.__clear__):
             self._value.__clear__()
         else:
             return False
@@ -168,9 +175,9 @@ no_default = NoDefault()
 
 
 def _normalize_key(key):
-    '''Normalize the key argument(s) of the load and dump methods'''
-    if hasattr(key, '__len__') and  len(key) == 0:
-        raise TypeError('At least one argument needed to specify a key.')
+    """Normalize the key argument(s) of the load and dump methods"""
+    if hasattr(key, "__len__") and len(key) == 0:
+        raise TypeError("At least one argument needed to specify a key.")
     # upack the key if needed
     while len(key) == 1 and isinstance(key, tuple):
         key = key[0]
@@ -178,34 +185,35 @@ def _normalize_key(key):
 
 
 class Cache(object):
-    '''Object that stores previously computed results.
+    """Object that stores previously computed results.
 
-       The cache behaves like a dictionary with some extra features that can be
-       used to avoid recomputation or reallocation.
-    '''
+    The cache behaves like a dictionary with some extra features that can be
+    used to avoid recomputation or reallocation.
+    """
+
     def __init__(self):
         self._store = {}
 
     def clear(self, **kwargs):
-        '''Clear all items in the cache
+        """Clear all items in the cache
 
-           **Optional arguments:**
+        **Optional arguments:**
 
-           dealloc
-                When set to True, the items are really removed from memory.
+        dealloc
+             When set to True, the items are really removed from memory.
 
-           tags
-                Limit the items cleared to those who have at least one tag
-                that matches one of the given tags. When this argument is used
-                and it contains at least one tag, items with no tags are not
-                cleared.
-        '''
+        tags
+             Limit the items cleared to those who have at least one tag
+             that matches one of the given tags. When this argument is used
+             and it contains at least one tag, items with no tags are not
+             cleared.
+        """
         # Parse kwargs. This forces the caller to use keywords in order to avoid
         # confusion.
-        dealloc = kwargs.pop('dealloc', False)
-        tags = kwargs.pop('tags', None)
+        dealloc = kwargs.pop("dealloc", False)
+        tags = kwargs.pop("tags", None)
         if len(kwargs) > 0:
-            raise TypeError('Unexpected arguments: %s' % list(kwargs.keys()))
+            raise TypeError("Unexpected arguments: %s" % list(kwargs.keys()))
         # actual work
         tags = _normalize_tags(tags)
         for key, item in list(self._store.items()):
@@ -213,17 +221,17 @@ class Cache(object):
                 self.clear_item(key, dealloc=dealloc)
 
     def clear_item(self, *key, **kwargs):
-        '''Clear a selected item from the cache
+        """Clear a selected item from the cache
 
-           **Optional arguments:**
+        **Optional arguments:**
 
-           dealloc
-                When set to True, the item is really removed from memory.
-        '''
+        dealloc
+             When set to True, the item is really removed from memory.
+        """
         key = _normalize_key(key)
-        dealloc = kwargs.pop('dealloc', False)
+        dealloc = kwargs.pop("dealloc", False)
         if len(kwargs) > 0:
-            raise TypeError('Unexpected arguments: %s' % list(kwargs.keys()))
+            raise TypeError("Unexpected arguments: %s" % list(kwargs.keys()))
         item = self._store.get(key)
         if item is None:
             return
@@ -234,50 +242,54 @@ class Cache(object):
             del self._store[key]
 
     def load(self, *key, **kwargs):
-        '''Get a value from the cache
+        """Get a value from the cache
 
-           **Arguments:**
+        **Arguments:**
 
-           key0 [key1 ...]
-                All positional arguments are used as keys to identify the cached
-                value.
+        key0 [key1 ...]
+             All positional arguments are used as keys to identify the cached
+             value.
 
-           **Optional arguments:**
+        **Optional arguments:**
 
-           alloc
-                Parameters used to allocate a cached value if it is not present
-                yet. This argument can take two forms. When integer or a
-                tuple of integers is given, an array is allocated.
-                Alternatively, a tuple may be given whose first element is a
-                constructor, and further elements are arguments for that
-                constructor.
+        alloc
+             Parameters used to allocate a cached value if it is not present
+             yet. This argument can take two forms. When integer or a
+             tuple of integers is given, an array is allocated.
+             Alternatively, a tuple may be given whose first element is a
+             constructor, and further elements are arguments for that
+             constructor.
 
-           default
-                A default value that is returned when the key does not exist in
-                the cache. This default value is not stored in the cache.
+        default
+             A default value that is returned when the key does not exist in
+             the cache. This default value is not stored in the cache.
 
-           tags
-                When alloc is used and a new object is thereby created or
-                reused, it will get these tags. This argument is only allowed if
-                the alloc argument is present. In case no new object is
-                allocated, the given tags must match those already present.
+        tags
+             When alloc is used and a new object is thereby created or
+             reused, it will get these tags. This argument is only allowed if
+             the alloc argument is present. In case no new object is
+             allocated, the given tags must match those already present.
 
-           The optional argument alloc and default are both meant to handle
-           situations when the key has not associated value. Hence they can not
-           be both present.
-        '''
+        The optional argument alloc and default are both meant to handle
+        situations when the key has not associated value. Hence they can not
+        be both present.
+        """
         key = _normalize_key(key)
 
         # parse kwargs
-        alloc = kwargs.pop('alloc', None)
-        default = kwargs.pop('default', no_default)
-        tags = kwargs.pop('tags', None)
+        alloc = kwargs.pop("alloc", None)
+        default = kwargs.pop("default", no_default)
+        tags = kwargs.pop("tags", None)
         if not (alloc is None or default is no_default):
-            raise TypeError('The optional arguments alloc and default can not be used at the same time.')
+            raise TypeError(
+                "The optional arguments alloc and default can not be used at the same time."
+            )
         if tags is not None and alloc is None:
-            raise TypeError('The tags argument is only allowed when the alloc argument is present.')
+            raise TypeError(
+                "The tags argument is only allowed when the alloc argument is present."
+            )
         if len(kwargs) > 0:
-            raise TypeError('Unknown optional arguments: %s' % list(kwargs.keys()))
+            raise TypeError("Unknown optional arguments: %s" % list(kwargs.keys()))
 
         # get the item from the store and decide what to do
         item = self._store.get(key)
@@ -293,7 +305,7 @@ class Cache(object):
                 try:
                     # try to reuse the same memroy
                     item.check_alloc(alloc)
-                    item._valid = True # as if it is newly allocated
+                    item._valid = True  # as if it is newly allocated
                     item.check_tags(tags)
                 except TypeError:
                     # if reuse fails, reallocate
@@ -326,27 +338,27 @@ class Cache(object):
             return item.valid
 
     def dump(self, *args, **kwargs):
-        '''Store an object in the cache.
+        """Store an object in the cache.
 
-           **Arguments:**
+        **Arguments:**
 
-           key1 [, key2, ...]
-                The positional arguments (except for the last) are used as a key
-                for the object.
+        key1 [, key2, ...]
+             The positional arguments (except for the last) are used as a key
+             for the object.
 
-           value
-                The object to be stored.
+        value
+             The object to be stored.
 
-           **Optional argument:**
+        **Optional argument:**
 
-           tags
-                Tags to be associated with the object
-        '''
-        tags = kwargs.pop('tags', None)
+        tags
+             Tags to be associated with the object
+        """
+        tags = kwargs.pop("tags", None)
         if len(kwargs) > 0:
-            raise TypeError('Unknown optional arguments: %s' % list(kwargs.keys()))
+            raise TypeError("Unknown optional arguments: %s" % list(kwargs.keys()))
         if len(args) < 2:
-            raise TypeError('At least two arguments are required: key1 and value.')
+            raise TypeError("At least two arguments are required: key1 and value.")
         key = _normalize_key(args[:-1])
         value = args[-1]
         item = CacheItem(value, tags)
@@ -365,21 +377,21 @@ class Cache(object):
         return iter(self.keys())
 
     def keys(self, tags=None):
-        '''Iterate over the keys of all valid items in the cache.'''
+        """Iterate over the keys of all valid items in the cache."""
         tags = _normalize_tags(tags)
         for key, item in self._store.items():
             if item.valid and (len(tags) == 0 or len(item.tags & tags) > 0):
                 yield key
 
     def values(self, tags=None):
-        '''Iterate over the values of all valid items in the cache.'''
+        """Iterate over the values of all valid items in the cache."""
         tags = _normalize_tags(tags)
         for item in self._store.values():
             if item.valid and (len(tags) == 0 or len(item.tags & tags) > 0):
                 yield item.value
 
     def items(self, tags=None):
-        '''Iterate over all valid items in the cache.'''
+        """Iterate over all valid items in the cache."""
         tags = _normalize_tags(tags)
         for key, item in self._store.items():
             if item.valid and (len(tags) == 0 or len(item.tags & tags) > 0):

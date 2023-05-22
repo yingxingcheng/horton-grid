@@ -53,5 +53,5 @@ def test_integrate_gauss():
     rtf = PowerRTransform(0.0005, 1e1, 100)
     grid = RadialGrid(rtf)
 
-    y = np.exp(-0.5*grid.radii**2)
-    assert abs(grid.integrate(y) - (2*np.pi)**1.5) < 1e-9
+    y = np.exp(-0.5 * grid.radii**2)
+    assert abs(grid.integrate(y) - (2 * np.pi) ** 1.5) < 1e-9

@@ -20,7 +20,7 @@
 # --
 
 
-__all__ = ['set_four_index_element']
+__all__ = ["set_four_index_element"]
 
 
 def set_four_index_element(four_index_object, i, j, k, l, value):
