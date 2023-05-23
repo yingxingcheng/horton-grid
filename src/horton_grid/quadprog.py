@@ -628,7 +628,7 @@ class QPSolver(object):
             # subtract the components of the gradient orthogonal to the constraints
             a_free, b_free, r_free, s_free = self.get_free_problem(free)
             g_free = np.dot(a_free, x[free]) - b_free
-            lagrange = np.linalg.lstsq(r_free.T, -g_free)[0]
+            lagrange = np.linalg.lstsq(r_free.T, -g_free, rcond=-1)[0]
             gradient += np.dot(self.r.T, lagrange)
         rmsd_free = np.sqrt((gradient**2 * free).mean())
         rmsd_frozen = np.sqrt((gradient**2 * (~free) * (gradient < 0)).mean())

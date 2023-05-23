@@ -274,7 +274,7 @@ def get_random_feasible(qps, free=None, positive=False):
         x_free = np.random.normal(0, 1, nfree)
         if qps.nl > 0:
             a_free, b_free, r_free, s_free = qps.get_free_problem(free)
-            x_free += np.linalg.lstsq(r_free, s_free - np.dot(r_free, x_free))[0]
+            x_free += np.linalg.lstsq(r_free, s_free - np.dot(r_free, x_free), rcond=-1)[0]
         if not positive or x_free.min() > 0:
             x = np.zeros(qps.nx)
             x[free] = x_free

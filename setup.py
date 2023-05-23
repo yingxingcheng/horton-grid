@@ -45,28 +45,26 @@ def get_depends(dirname):
     return result
 
 
-def get_headers():
-    """Get all header-like files that need to be installed"""
-    result = []
-    for dn in ["horton/"] + glob("horton/*/"):
-        result.extend(glob("%s/*.h" % dn))
-    return result
-
-
 ext_modules = [
     Extension(
         "horton_grid.cext",
         sources=get_sources("src/horton_grid"),
         depends=get_depends("src/horton_grid"),
-        include_dirs=[np.get_include(), "."],
+        include_dirs=[np.get_include(), "src"],
         language="c++",
         extra_compile_args=["-std=c++11"],  # example compiler arguments
     ),
     Extension(
         "horton_grid.grid.cext",
         sources=get_sources("src/horton_grid/grid"),
-        depends=get_depends("src/horton_grid/grid"),
-        include_dirs=[np.get_include(), "."],
+        depends=get_depends("src/horton_grid/grid")
+        + [
+            "src/horton_grid/cell.pxd",
+            "src/horton_grid/cell.h",
+            "src/horton_grid/moments.pxd",
+            "src/horton_grid/moments.h",
+        ],
+        include_dirs=[np.get_include(), "src"],
         language="c++",
         extra_compile_args=["-std=c++11"],
     ),
@@ -80,12 +78,10 @@ if __name__ == "__main__":
         package_dir={"": "src"},
         packages=find_packages("src"),
         package_data={
-            "horton_grid": [
-                "data/*.*",
-                "data/grids/*.*",
-                "data/test/*.*",
-                "data/examples/*.py",
-            ],
+            "horton_grid.data": ["data/*.*"],
+            "horton_grid.data.grids": ["data/grids/*.*"],
+            "horton_grid.data.test": ["data/test/*.*"],
+            "horton_grid.data.examples": ["data/examples/*.py"],
         },
         include_package_data=True,
         ext_modules=ext_modules,

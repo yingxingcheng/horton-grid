@@ -197,7 +197,8 @@ class ScreenLog(object):
             else:
                 current = rest
                 rest = ""
-            print("%s%s" % (lead, current), file=self._file)
+            if not self._file.closed:
+                print("%s%s" % (lead, current), file=self._file)
             if first:
                 lead = " " * len(lead)
                 first = False
@@ -246,7 +247,8 @@ class ScreenLog(object):
     def blank(self):
         """Print a blank line."""
         if not self._last_blank:
-            print(file=self._file)
+            if not self._file.closed:
+                print(file=self._file)
             self._last_blank = True
 
     def deflist(self, l):
@@ -290,7 +292,8 @@ class ScreenLog(object):
 
         if self.do_warning and not self._active:
             self._active = True
-            print(self.head_banner, file=self._file)
+            if not self._file.closed:
+                print(self.head_banner, file=self._file)
             self._print_basic_info()
 
     def print_footer(self):
@@ -300,7 +303,8 @@ class ScreenLog(object):
             self._print_basic_info()
             self.timer._stop("Total")
             self.timer.report(self)
-            print(self.foot_banner, file=self._file)
+            if not self._file.closed:
+                print(self.foot_banner, file=self._file)
 
     def _print_basic_info(self):
         """Print basic runtime info."""
@@ -731,7 +735,7 @@ class Biblio(object):
             log.blank()
 
 
-head_banner = """\
+head_banner = r"""
 ================================================================================
  _ __ _
 / (..) \ Welcome to HORTON %s!
@@ -758,7 +762,7 @@ head_banner = """\
     "2.3.0"
 )  # (horton.__version__)
 
-foot_banner = """
+foot_banner = r"""
 ================================================================================
  _    _
 / )--( \ End of the HORTON program.
