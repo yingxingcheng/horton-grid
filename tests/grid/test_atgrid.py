@@ -23,13 +23,13 @@
 import os, shutil, numpy as np, h5py as h5
 from nose.tools import assert_raises
 
-from horton import *  # pylint: disable=wildcard-import,unused-wildcard-import
+from horton_grid import *  # pylint: disable=wildcard-import,unused-wildcard-import
 
-from horton.test.common import tmpdir
+from ..common import tmpdir
 
 
 def test_normalize_nlls():
-    from horton.grid.atgrid import _normalize_nlls
+    from horton_grid.grid.atgrid import _normalize_nlls
 
     assert (_normalize_nlls(6, 10) == np.array([6] * 10)).all()
     assert (_normalize_nlls([6], 10) == np.array([6] * 10)).all()

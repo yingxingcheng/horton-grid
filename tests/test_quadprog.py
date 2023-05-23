@@ -37,7 +37,7 @@ from horton_grid.quadprog import (
     solve_radius,
 )
 
-from horton_grid.test.common import numpy_seed
+from .common import numpy_seed
 
 
 def test_counter_to_free():

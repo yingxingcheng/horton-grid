@@ -22,7 +22,7 @@
 
 import numpy as np
 
-from horton.grid.cext import LinearRTransform, CubicSpline
+from horton_grid.grid.cext import LinearRTransform, CubicSpline
 
 
 __all__ = ["get_cosine_spline", "get_exp_spline"]

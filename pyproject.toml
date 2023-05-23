@@ -70,7 +70,7 @@ exclude = [
     "node_modules",
     "venv",
 ]
-per-file-ignores = {"__init__.py" = ["F403"], "src/horton_grid/grid/test/*.py"=["F401", "F403"], "src/horton_grid/test/*.py"=["F401", "F403"],"src/horton_grid/io/test/*.py"=["F401", "F403"]}
+per-file-ignores = {"__init__.py" = ["F403"], "tests/*.py"=["F401", "F403"], "tests/grid/*.py"=["F401", "F403"],"tests/io/*.py"=["F401", "F403"]}
 
 # Same as Black.
 line-length = 100
@@ -84,3 +84,8 @@ target-version = "py310"
 [tool.setuptools_scm]
 version_scheme = "post-release"
 local_scheme = "no-local-version"
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+addopts = "-v"

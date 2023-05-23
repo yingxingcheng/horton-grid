@@ -32,7 +32,8 @@ import numpy as np
 
 from horton_grid.cext import Cell
 from horton_grid.moments import get_cartesian_powers
-from horton_grid.meanfield.occ import AufbauOccModel
+
+# from horton_grid.meanfield.occ import AufbauOccModel
 
 __all__ = [
     "in_horton_source_root",
@@ -41,7 +42,7 @@ __all__ = [
     "check_delta",
     "get_random_cell",
     "get_pentagon_moments",
-    "compare_occ_model",
+    # "compare_occ_model",
     "compare_orbs",
     "compare_mols",
     "tmpdir",
@@ -273,15 +274,15 @@ def get_point_moments(coordinates, rmat=None, lmax=4):
     return result
 
 
-def compare_occ_model(occ_model1, occ_model2):
-    assert occ_model1.__class__ == occ_model2.__class__
-    if occ_model1 is None:
-        assert occ_model2 is None
-    elif isinstance(occ_model1, AufbauOccModel):
-        assert occ_model1.nalpha == occ_model2.nalpha
-        assert occ_model1.nbeta == occ_model2.nbeta
-    else:
-        raise NotImplementedError
+# def compare_occ_model(occ_model1, occ_model2):
+#     assert occ_model1.__class__ == occ_model2.__class__
+#     if occ_model1 is None:
+#         assert occ_model2 is None
+#     elif isinstance(occ_model1, AufbauOccModel):
+#         assert occ_model1.nalpha == occ_model2.nalpha
+#         assert occ_model1.nbeta == occ_model2.nbeta
+#     else:
+#         raise NotImplementedError
 
 
 def compare_orbs(orb1, orb2):

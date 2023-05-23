@@ -22,7 +22,7 @@
 
 import numpy as np, h5py as h5
 
-from horton import *  # pylint: disable=wildcard-import,unused-wildcard-import
+from horton_grid import *  # pylint: disable=wildcard-import,unused-wildcard-import
 
 
 def test_integrate_hydrogen_single_1s():

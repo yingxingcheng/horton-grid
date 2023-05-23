@@ -23,9 +23,9 @@
 import numpy as np
 import h5py as h5
 
-from horton import *  # pylint: disable=wildcard-import,unused-wildcard-import
+from horton_grid import *  # pylint: disable=wildcard-import,unused-wildcard-import
 
-from horton.test.common import numpy_seed
+from ..common import numpy_seed
 
 
 def test_tridiagsym_solve():

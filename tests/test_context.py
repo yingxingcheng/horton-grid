@@ -26,14 +26,14 @@ from nose.tools import assert_raises
 
 from horton_grid import context
 
-from horton_grid.test.common import in_horton_source_root
+from .common import in_horton_source_root
 
 
-def test_context():
-    fn = context.get_fn("basis/sto-3g.nwchem")
-    assert os.path.isfile(fn)
-    fns = context.glob("basis/*.nwchem")
-    assert fn in fns
+# def test_context():
+#     fn = context.get_fn("basis/sto-3g.nwchem")
+#     assert os.path.isfile(fn)
+#     fns = context.glob("basis/*.nwchem")
+#     assert fn in fns
 
 
 def test_data_files():

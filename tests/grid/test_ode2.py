@@ -23,7 +23,7 @@
 from scipy.special import erf
 import numpy as np, random
 
-from horton import *  # pylint: disable=wildcard-import,unused-wildcard-import
+from horton_grid import *  # pylint: disable=wildcard-import,unused-wildcard-import
 
 
 def _merge(y, d):

@@ -22,91 +22,51 @@
 
 
 import numpy as np
+from glob import glob
 
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
 
 
-# Read requirements.txt, ignore comments
-with open("requirements.txt") as f:
-    requirements = []
-    for line in f:
-        if line[0] != "#":
-            requirements.append(line.strip())
+def get_sources(dirname):
+    """Get all cpp files and the cext.pyx file of a package"""
+    # avoid accidental inclusion of in-place build files and inc files
+    result = [
+        fn for fn in glob("%s/*.cpp" % dirname) if not (("ext.cpp" in fn) or ("_inc.cpp" in fn))
+    ]
+    result.append("%s/cext.pyx" % dirname)
+    return result
+
+
+def get_depends(dirname):
+    """Get all files that should trigger a recompilation of the C extension of a package"""
+    result = glob("%s/*.h" % dirname)
+    result += glob("%s/*.pxd" % dirname)
+    return result
+
+
+def get_headers():
+    """Get all header-like files that need to be installed"""
+    result = []
+    for dn in ["horton/"] + glob("horton/*/"):
+        result.extend(glob("%s/*.h" % dn))
+    return result
+
 
 ext_modules = [
     Extension(
         "horton_grid.cext",
-        sources=[
-            "src/horton_grid/cext.pyx",
-            # "horton_grid/cext.cpp",
-            "src/horton_grid/cell.cpp",
-            "src/horton_grid/moments.cpp",
-            "src/horton_grid/nucpot.cpp",
-        ],
-        depends=[
-            # headers
-            "src/horton_grid/cext.h",
-            "src/horton_grid/cell.h",
-            "src/horton_grid/nucpot.h",
-            "src/horton_grid/moments.h",
-            # pxd
-            "src/horton_grid/nucpot.pxd",
-            "src/horton_grid/moments.pxd",
-            "src/horton_grid/cell.pxd",
-            "src/horton_grid/cext.pxd",
-        ],
-        include_dirs=[
-            np.get_include(),
-            "src/horton_grid",
-        ],
+        sources=get_sources("src/horton_grid"),
+        depends=get_depends("src/horton_grid"),
+        include_dirs=[np.get_include(), "."],
         language="c++",
         extra_compile_args=["-std=c++11"],  # example compiler arguments
     ),
     Extension(
         "horton_grid.grid.cext",
-        sources=[
-            "src/horton_grid/grid/cext.pyx",
-            "src/horton_grid/grid/becke.cpp",
-            "src/horton_grid/grid/cubic_spline.cpp",
-            "src/horton_grid/grid/evaluate.cpp",
-            "src/horton_grid/grid/lebedev_laikov.cpp",
-            "src/horton_grid/grid/ode2.cpp",
-            "src/horton_grid/grid/rtransform.cpp",
-            "src/horton_grid/grid/uniform.cpp",
-            "src/horton_grid/grid/utils.cpp",
-        ],
-        depends=[
-            "src/horton_grid/grid/cext.h",
-            "src/horton_grid/grid/cext.pxd",
-            "src/horton_grid/grid/becke.h",
-            "src/horton_grid/grid/becke.pxd",
-            "src/horton_grid/grid/cubic_spline.h",
-            "src/horton_grid/grid/cubic_spline.pxd",
-            "src/horton_grid/grid/evaluate.h",
-            "src/horton_grid/grid/evaluate.pxd",
-            "src/horton_grid/grid/lebedev_laikov.h",
-            "src/horton_grid/grid/lebedev_laikov.pxd",
-            "src/horton_grid/grid/ode2.h",
-            "src/horton_grid/grid/ode2.pxd",
-            "src/horton_grid/grid/rtransform.h",
-            "src/horton_grid/grid/rtransform.pxd",
-            "src/horton_grid/grid/uniform.h",
-            "src/horton_grid/grid/uniform.pxd",
-            "src/horton_grid/grid/utils.h",
-            "src/horton_grid/grid/utils.pxd",
-        ]
-        + [
-            "src/horton_grid/cell.pxd",
-            "src/horton_grid/cell.h",
-            "src/horton_grid/moments.pxd",
-            "src/horton_grid/moments.h",
-        ],
-        include_dirs=[
-            np.get_include(),
-            "src/horton_grid",
-            "src/horton_grid/grid",
-        ],
+        sources=get_sources("src/horton_grid/grid"),
+        depends=get_depends("src/horton_grid/grid"),
+        include_dirs=[np.get_include(), "."],
         language="c++",
         extra_compile_args=["-std=c++11"],
     ),
@@ -117,22 +77,6 @@ for e in ext_modules:
 
 if __name__ == "__main__":
     setup(
-        # name="horton_grid",
-        # version="2.3.0",
-        # author=["YingXing Cheng", "Toon Verstraelen"],
-        # author_email=["yingxing.cheng@ugent.be", "toon.verstraelen@ugent.be"],
-        # url="https://github.com/yingxingcheng/horton_grid",
-        # description="A detailed description of your project",
-        # long_description="README",
-        # long_description_content_type="text/markdown",
-        # license="Your License",
-        # classifiers=[
-        #     "Development Status :: 3 - Alpha",
-        #     "Intended Audience :: Science/Research",
-        #     "License :: OSI Approved :: MIT License",
-        #     "Programming Language :: Python :: 3",
-        #     "Programming Language :: Python :: 3.10",
-        # ],
         package_dir={"": "src"},
         packages=find_packages("src"),
         package_data={
@@ -144,8 +88,6 @@ if __name__ == "__main__":
             ],
         },
         include_package_data=True,
-        # python_requires=">=3.10",
-        # install_requires=requirements,
         ext_modules=ext_modules,
         cmdclass={"build_ext": build_ext},
     )

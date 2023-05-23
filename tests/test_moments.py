@@ -25,7 +25,7 @@ from nose.tools import assert_raises
 
 from horton_grid import *  # pylint: disable=wildcard-import,unused-wildcard-import
 
-from horton_grid.test.common import get_pentagon_moments, get_point_moments
+from .common import get_pentagon_moments, get_point_moments
 
 
 def test_get_ncart():
@@ -45,7 +45,7 @@ def test_get_ncart_cumul():
 def test_get_cartesian_powers():
     lmax = 4
     cartesian_powers = get_cartesian_powers(lmax)
-    assert np.issubdtype(cartesian_powers.dtype, np.int)
+    assert np.issubdtype(cartesian_powers.dtype, int)
     assert cartesian_powers.shape == (get_ncart_cumul(lmax), 3)
     assert (cartesian_powers[0] == [0, 0, 0]).all()
     assert (cartesian_powers[1] == [1, 0, 0]).all()

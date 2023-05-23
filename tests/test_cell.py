@@ -26,7 +26,7 @@ from nose.plugins.attrib import attr
 
 from horton_grid import *  # pylint: disable=wildcard-import,unused-wildcard-import
 
-from horton_grid.test.common import get_random_cell
+from .common import get_random_cell
 
 
 def check_frac_cart(cell):
