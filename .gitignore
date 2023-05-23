@@ -177,4 +177,4 @@ venv.bak/
 # mkdocs documentation
 /site
 
-record.txt
+_version.py
