@@ -1,5 +1,0 @@
-# Minimal requirements for RepRepBuild and the initial template
-pre-commit
-pytest
-cython
-numpy
