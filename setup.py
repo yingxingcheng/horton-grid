@@ -68,6 +68,21 @@ ext_modules = [
         language="c++",
         extra_compile_args=["-std=c++11"],
     ),
+    Extension(
+        "horton_grid.espfit.cext",
+        sources=get_sources("src/horton_grid/espfit"),
+        # + ["src/horton_grid/cell.cpp", "src/horton_grid/grid/uniform.cpp"],
+        depends=get_depends("src/horton_grid/espfit")
+        + [
+            "src/horton_grid/cell.pxd",
+            "src/horton_grid/cell.h",
+            "src/horton_grid/grid/uniform.pxd",
+            "src/horton_grid/grid/uniform.h",
+        ],
+        include_dirs=[np.get_include(), "src", "src/horton_grid/grid"],
+        extra_compile_args=["-std=c++11"],
+        language="c++",
+    ),
 ]
 
 for e in ext_modules:

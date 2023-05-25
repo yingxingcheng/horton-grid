@@ -39,3 +39,5 @@ from horton_grid.periodic import *
 from horton_grid.quadprog import *
 from horton_grid.units import *
 from horton_grid.utils import *
+
+from horton_grid.espfit import *

@@ -29,22 +29,54 @@ from horton_grid import *  # pylint: disable=wildcard-import,unused-wildcard-imp
 
 # @attr("slow")
 # def test_solve_poisson_becke_n2():
-#     mol = IOData.from_file(context.get_fn("test/n2_hfs_sto3g.fchk"))
+#
+#     import importlib
+#
+#     # Check if iodata is installed
+#     if importlib.util.find_spec("iodata") is None:
+#         print("iodata package is not installed.")
+#         assert False
+#     else:
+#         # Check if gbasis is installed
+#         if importlib.util.find_spec("gbasis") is None:
+#             print("gbasis package is not installed.")
+#             assert False
+#         else:
+#             # Import necessary modules
+#             from iodata import load_one
+#             import gbasis.evals.electrostatic_potential
+#             from gbasis.evals.eval import evaluate_basis
+#             from gbasis.wrappers import from_iodata
+#
+#     mol = load_one(context.get_fn("test/n2_hfs_sto3g.fchk"))
 #     lmaxmax = 4
 #
 #     # compute hartree potential on a molecular grid
 #     molgrid = BeckeMolGrid(
-#         mol.coordinates,
-#         mol.numbers,
-#         mol.pseudo_numbers,
+#         mol.atcoords,
+#         mol.atnums,
+#         mol.atcorenums,
 #         random_rotate=False,
 #         mode="keep",
 #     )
-#     dm_full = mol.get_dm_full()
-#     reference = mol.obasis.compute_grid_hartree_dm(dm_full, molgrid.points)
+#     dm_full = mol.one_rdms.get("post_scf", mol.one_rdms.get("scf"))
+#     # dm_full = mol.get_dm_full()
+#     # reference = mol.obasis.compute_grid_hartree_dm(dm_full, molgrid.points)
+#     basis, coord_types = from_iodata(mol)
+#     # TODO: fix here
+#     reference = gbasis.evals.electrostatic_potential.electrostatic_potential(
+#         basis,
+#         dm_full,
+#         molgrid.points,
+#         mol.atcoords,
+#         mol.atnums,
+#         coord_type="cartesian",
+#     )
 #
 #     # construct the same potential numerically with Becke's method
-#     rho = mol.obasis.compute_grid_density_dm(dm_full, molgrid.points)
+#     basis_grid = evaluate_basis(basis, molgrid.points, coord_type=coord_types)
+#     rho = np.einsum("ab,bp,ap->p", dm_full, basis_grid, basis_grid, optimize=True)
+#     # rho = mol.obasis.compute_grid_density_dm(dm_full, molgrid.points)
 #     begin = 0
 #     hds = []
 #     for i in range(mol.natom):
@@ -64,7 +96,7 @@ from horton_grid import *  # pylint: disable=wildcard-import,unused-wildcard-imp
 #     for lmax in range(0, lmaxmax + 1):
 #         result = molgrid.zeros()
 #         for i in range(mol.natom):
-#             molgrid.eval_decomposition(hds[i][: (lmax + 1) ** 2], mol.coordinates[i], result)
+#             molgrid.eval_decomposition(hds[i][: (lmax + 1) ** 2], mol.atcoords[i], result)
 #         potential_error = result - reference
 #         error = molgrid.integrate(potential_error, potential_error) ** 0.5
 #         if last_error is not None:
@@ -91,8 +123,10 @@ from horton_grid import *  # pylint: disable=wildcard-import,unused-wildcard-imp
 #         # Plot stuff
 #         import matplotlib.pyplot as pt
 #
-#         linegrid = LineGrid(mol.coordinates[0], mol.coordinates[1], 500, 1)
-#         rho = mol.obasis.compute_grid_density_dm(dm_full, linegrid.points)
+#         linegrid = LineGrid(mol.atcoords[0], mol.atcoords[1], 500, 1)
+#         basis_grid = evaluate_basis(basis, molgrid.points, coord_type=coord_types)
+#         rho = np.einsum("ab,bp,ap->p", one_rdm, linegrid.points, linegrid.points, optimize=True)
+#         # rho = mol.obasis.compute_grid_density_dm(dm_full, linegrid.points)
 #         reference = mol.obasis.compute_grid_hartree_dm(dm_full, linegrid.points)
 #         for lmax in range(0, lmaxmax + 1):
 #             result = linegrid.zeros()
