@@ -23,7 +23,7 @@
 
 
 import numpy as np
-from horton_grid.log import log
+from horton_core.log import log
 from horton_grid.grid.utils import parse_args_integrate
 import numbers
 

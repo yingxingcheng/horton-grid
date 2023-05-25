@@ -23,6 +23,7 @@
 import os, shutil, numpy as np, h5py as h5
 from nose.tools import assert_raises
 
+from horton_core import *
 from horton_grid import *  # pylint: disable=wildcard-import,unused-wildcard-import
 
 from ..common import tmpdir

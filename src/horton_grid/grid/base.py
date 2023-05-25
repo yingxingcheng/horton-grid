@@ -23,7 +23,7 @@
 
 import numpy as np
 
-from horton_grid.log import timer
+from horton_core.log import timer
 from horton_grid.grid.utils import parse_args_integrate
 from horton_grid.grid.cext import (
     dot_multi,

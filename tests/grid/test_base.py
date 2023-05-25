@@ -22,7 +22,9 @@
 
 import numpy as np
 
+# from horton_core import *
 from horton_grid import *  # pylint: disable=wildcard-import,unused-wildcard-import
+from horton_grid.cext import Cell
 
 from .common import get_cosine_spline
 from ..common import get_random_cell, numpy_seed

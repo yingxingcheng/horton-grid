@@ -22,7 +22,7 @@
 
 
 import numpy as np
-from horton_grid.cext import Cell
+from horton_core.cext import Cell
 from horton_grid.grid.cext import UniformGrid
 
 

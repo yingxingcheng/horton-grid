@@ -26,9 +26,9 @@ import numpy as np
 from horton_grid.grid.base import IntGrid
 from horton_grid.grid.atgrid import AtomicGrid, AtomicGridSpec
 from horton_grid.grid.cext import becke_helper_atom
-from horton_grid.log import log, timer, biblio
-from horton_grid.periodic import periodic
-from horton_grid.utils import typecheck_geo, doc_inherit
+from horton_core.log import log, timer, biblio
+from horton_core.periodic import periodic
+from horton_core.utils import typecheck_geo, doc_inherit
 
 
 __all__ = ["BeckeMolGrid"]

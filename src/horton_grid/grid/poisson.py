@@ -22,7 +22,7 @@
 
 import numpy as np
 
-from horton_grid.log import timer, biblio
+from horton_core.log import timer, biblio
 from horton_grid.grid.cext import CubicSpline, PotentialExtrapolation
 from horton_grid.grid.ode2 import solve_ode2
 from horton_grid.grid.radial import RadialGrid

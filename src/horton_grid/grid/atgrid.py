@@ -24,7 +24,7 @@
 import numpy as np, os
 
 
-from horton_grid.context import context
+from horton_core.context import context
 from horton_grid.grid.base import IntGrid
 from horton_grid.grid.cext import (
     lebedev_laikov_sphere,
@@ -36,8 +36,8 @@ from horton_grid.grid.cext import (
     CubicSpline,
 )
 from horton_grid.grid.radial import RadialGrid
-from horton_grid.log import log, timer, biblio
-from horton_grid.units import angstrom
+from horton_core.log import log, timer, biblio
+from horton_core.units import angstrom
 
 
 __all__ = [

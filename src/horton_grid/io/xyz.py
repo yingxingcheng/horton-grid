@@ -23,8 +23,8 @@
 
 import numpy as np
 
-from horton_grid.units import angstrom
-from horton_grid.periodic import periodic
+from horton_core.units import angstrom
+from horton_core.periodic import periodic
 
 
 __all__ = ["load_xyz", "dump_xyz"]

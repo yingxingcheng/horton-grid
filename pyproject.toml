@@ -32,6 +32,7 @@ dependencies = [
     "nose",
     "scipy",
     "h5py",
+    "horton-core"
 ]
 dynamic = ["version"]
 
