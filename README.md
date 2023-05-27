@@ -10,6 +10,8 @@ HORTON-GRID is an essential tool used in computational chemistry. It provides fu
 
 For more information, visit HORTON's website: [http://theochem.github.io/horton/latest](http://theochem.github.io/horton/latest)
 
+:warning: The new API of `grid` in `Horton` has been changed at https://github.com/theochem/grid. The code is now purely Python and has been refactored since then. Its API has been updated to be more robust, flexible, and user-friendly, resulting in higher quality code. It is (to be) distributed under `conda` and `pip`. If you are thinking of doing active development in grid, I highly encourage you to do so at https://github.com/theochem/grid.
+
 ## Key Features
 
 - Molecular grids for computational chemistry.
@@ -19,6 +21,12 @@ For more information, visit HORTON's website: [http://theochem.github.io/horton/
 
 ## Installation
 
+### For Users
+```
+pip install horton-grid
+```
+
+### For Developers
 Clone the repository:
 
 ```bash
@@ -30,7 +38,7 @@ cd horton-grid
 ```
 Install the package:
 ```bash
-pip install .
+pip install -e .
 ```
 
 ## Dependencies
